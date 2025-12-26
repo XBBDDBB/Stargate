@@ -122,8 +122,8 @@ sh /xxx/xxx/Stargate/bin/AntiMemoryAnchorStake.sh 参数
 ```ini
 #这里配置要同步的表。也是未来放在table文件夹下的东东。
 
-#ID序号		表全名		    迁移方向(1则表示从源到目标，2则表示从目标到源头)	删除方式（1Delete全表，2Truncate全表，0不删只插入，3智能建删分区）
-1               schema.tables	    1						0
+#ID序号       表全名		    迁移方向(1则表示从源到目标，2则表示从目标到源头)	删除方式（1Delete全表，2Truncate全表，0不删只插入，3智能建删分区）
+1            schema.tables  1						                    0
 
 #删除方式中012随便配，但是3的话，有要求。
 分区只支持list分区，并且针对某公司特殊的产品格式，分区格式为：
