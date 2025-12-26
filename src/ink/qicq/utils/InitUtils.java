@@ -23,10 +23,10 @@ public class InitUtils {
 
     public Map<String,String> init(String[] args){
         if(args.length==0){
-            LogUtils.recordERRORLog("传入参数有误，请检查。。。");
+            LogUtils.recordERRORLog("传入参数有误，请检查。。。","QTB");
             System.exit(1);
         }
-        LogUtils.recordINFOLog("正在初始化参数。。。");
+        LogUtils.recordINFOLog("正在初始化参数。。。","QTB");
         Map<String,String> paramMap = new HashMap<String,String>();
         paramMap.put("first_dbName",args[0]);//第一个数据库的名字
         paramMap.put("first_driver",args[1]);//第一个数据库的驱动类
@@ -78,7 +78,7 @@ public class InitUtils {
             //sourceDB = new DBUtils(paramMap.get("second_dbName"), paramMap.get("second_driver"), paramMap.get("second_jdbcUrl"), paramMap.get("second_username") ,paramMap.get("second_password"));
         }else{
             //这是什么玩意？？？
-            LogUtils.recordERRORLog("sync_direction参数配置错误，请检查sync_direction参数值。");
+            LogUtils.recordERRORLog("sync_direction参数配置错误，请检查sync_direction参数值。","QTB");
             System.exit(1);
         }
         //设置特殊的数据库session参数
@@ -108,7 +108,7 @@ public class InitUtils {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                LogUtils.recordERRORLog(currentDB.getDBName()+"初始化数据连接session参数失败："+e.getMessage());
+                LogUtils.recordERRORLog(currentDB.getDBName()+"初始化数据连接session参数失败："+e.getMessage(),null);
             } finally {
                 try {
                     if(br != null){
@@ -123,7 +123,7 @@ public class InitUtils {
                 }
                 catch (Exception e) {
                     e.printStackTrace();
-                    LogUtils.recordERRORLog(currentDB.getDBName()+"初始化数据连接session参数失败："+e.getMessage());
+                    LogUtils.recordERRORLog(currentDB.getDBName()+"初始化数据连接session参数失败："+e.getMessage(),null);
                 }
             }
         }

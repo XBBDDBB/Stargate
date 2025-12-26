@@ -12,12 +12,12 @@ readonly MAS_CONFIG_PATH=${V_UP_PATH}/config
 readonly MAS_LIB_PATH=${V_UP_PATH}/lib
 readonly MAS_BACKUP_PATH=${V_UP_PATH}/backups
 
-echo "「记忆锚点桩」开始解析记忆锚点"
+echo "「记忆锚点」开始解析记忆锚点"
 
 BACKUP_DATABASE_NAME=$1
 
 java -Dfile.encoding=UTF-8 -jar  ${MAS_LIB_PATH}/ink.qicq.backups.jar MASCreateFile ${MAS_BACKUP_PATH} ${BACKUP_DATABASE_NAME} ${MAS_BACKUP_PATH}
 
-echo "「记忆锚点桩」本次记忆锚点生成完毕。"
+echo "「记忆锚点」本次记忆锚点生成完毕。"
 
 

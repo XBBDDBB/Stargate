@@ -6,9 +6,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ParamUtils {
 
-    //量子跃迁桥主参数
+    //星际之门主参数
     public static Map<String,String> paramMap = null;
 
-    //量子跃迁桥任务队列
+    //星际之门任务队列
     public static Queue<TaskUtils> queue = new ConcurrentLinkedQueue<TaskUtils>();
 }

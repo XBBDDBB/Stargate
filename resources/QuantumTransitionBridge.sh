@@ -35,7 +35,7 @@ SECOND_DRIVER_CLASS=${DRIVER_CLASS}
 SECOND_JDBC_URL=${JDBC_URL}
 SECOND_USER_NAME=${USER_NAME}
 SECOND_PASS_WORD=${PASS_WORD}
-log "数据库配置读取完毕，开始创建量子跃迁桥。。。"
+log "数据库配置读取完毕，开始创建量子跃迁。。。"
 
 find  $QTB_LOG_PATH -type f -name "QTB*.log" ! -mtime -14 -delete
 
@@ -44,7 +44,7 @@ if [[ "$SYNC_DIRECTION" -eq 1 ]]; then
 elif [[ "$SYNC_DIRECTION" -eq 2 ]]; then
   log "本次同步由「${SECOND_DB_NAME}」同步至「${FIRST_DB_NAME}」"
 else
-  log "未知同步方向，量子跃迁桥创建失败。"
+  log "未知同步方向，量子跃迁创建失败。"
   exit 1
 fi
 
@@ -56,8 +56,8 @@ java -Dfile.encoding=UTF-8 -jar ${QTB_LIB_PATH}/ink.qicq.synchronization.jar $FI
 exit_code=$?
 
 if [ $exit_code -eq 0 ]; then
-    log "量子跃迁桥传输完成，本次跃迁已关闭。"
+    log "量子跃迁传输完成，本次跃迁已关闭。"
 else
-    log "量子跃迁桥传输失败，请查看错误日志。"
+    log "量子跃迁传输失败，请查看错误日志。"
     exit 1
 fi

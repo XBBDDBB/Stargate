@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ResultSetUtils {
-    public static PreparedStatement preparedStatementSetting(List<String> columnList, Map<String, String> columnMapping, ResultSet sourceRS, PreparedStatement targetPs) throws SQLException, ParseException {
+    public static PreparedStatement preparedStatementSetting(List<String> columnList, Map<String, String> columnMapping, ResultSet sourceRS, PreparedStatement targetPs, String sourceDBName) throws SQLException, ParseException {
         for(int j = 0;j<columnList.size();j++){
             //当前列值
             Object object = sourceRS.getObject(columnList.get(j));
@@ -48,6 +48,7 @@ public class ResultSetUtils {
                 }else{
                     String temp = String.valueOf(object);
                     if(object instanceof Timestamp){
+                        //如果后续其他数据中instanceof判断实效，可用sourceDBName强制根据数据库名字判断
                         //GaussDB不支持Date类型，他会返回Timestamp格式是yyyy-MM-dd HH:ii:ss.0
                         SimpleDateFormat sourceSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                         java.util.Date date = sourceSdf.parse(temp);
@@ -62,6 +63,7 @@ public class ResultSetUtils {
                 }else{
                     String temp = String.valueOf(object);
                     if(object instanceof Date){
+                        //如果后续其他数据中instanceof判断实效，可用sourceDBName强制根据数据库名字判断
                         //GaussDB不支持Date类型，需要把所有的yyyy-MM-dd转换成Timestamp
                         temp = temp+" 00:00:00";
                     }
@@ -86,6 +88,7 @@ public class ResultSetUtils {
                 }
             }else if("CLOB".equals(columnType)){
                 if(object instanceof String){
+                    //如果后续其他数据中instanceof判断实效，可用sourceDBName强制根据数据库名字判断
                     object = new SerialClob(object.toString().toCharArray());
                 }
                 if(object==null){
