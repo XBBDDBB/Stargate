@@ -72,4 +72,110 @@ public class SQLUtils {
         }
         return sql;
     }
+
+
+
+
+    public static String generateAllTableListSqlByTableSchema(String DBType, String schema){
+        String sql = null;
+        if("GBase8AMPP".equals(DBType)){
+            sql = "SELECT TABLE_NAME AS TABLE_FULL_NAME FROM INFORMATION_SCHEMA.TABLES WHERE UPPER(TABLE_SCHEMA)=UPPER('" + schema + "') AND UPPER(TABLE_TYPE)=UPPER('BASE TABLE')";
+        }else if("GaussDB".equals(DBType)){
+            sql = "SELECT SCHEMANAME||'.'||TABLENAME AS TABLE_FULL_NAME FROM PG_CATALOG.PG_TABLES WHERE UPPER(SCHEMANAME)=UPPER('" + schema + "')";
+        }
+        return sql;
+    }
+    public static String generateCreateTableSqlByTableSchemaAndName(String DBType, String schema, String name){
+        String sql = null;
+        if("GBase8AMPP".equals(DBType)){
+            sql = "SHOW CREATE TABLE " + schema + "." + name;
+        }else if("GaussDB".equals(DBType)){
+            //GaussDB的name其实已经时schema.tablename了
+            sql = "SELECT PG_GET_TABLEDEF('" +  name + "')";
+        }
+        return sql;
+    }
+    public static String generateAllFunctionListSqlByTableSchema(String DBType, String schema){
+        String sql = null;
+        if("GBase8AMPP".equals(DBType)){
+            sql = "SELECT ROUTINE_NAME AS FULL_FUNCTION_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE UPPER(ROUTINE_SCHEMA)=UPPER('" + schema + "') AND UPPER(ROUTINE_TYPE)=UPPER('FUNCTION')";
+        }else if("GaussDB".equals(DBType)){
+            sql = "SELECT OBJECT_ID||'$D$M$'||OBJECT_NAME AS FULL_FUNCTION_NAME FROM MY_OBJECTS " +
+                    "WHERE OBJECT_NAME IN ( " +
+                    "SELECT PRONAME FROM PG_PROC WHERE PRONAMESPACE IN ( " +
+                    "SELECT NAMESPACE FROM MY_OBJECTS WHERE OBJECT_NAME IN ( " +
+                    "SELECT TABLENAME FROM PG_CATALOG.PG_TABLES WHERE UPPER(SCHEMANAME)=UPPER('" + schema + "') LIMIT 1 " +
+                    ") " +
+                    "AND UPPER(OBJECT_TYPE) = 'TABLE' " +
+                    ") " +
+                    ") " +
+                    "AND UPPER(OBJECT_TYPE)='FUNCTION'";
+        }
+        return sql;
+    }
+    public static String generateCreateFunctionSqlByTableSchemaAndName(String DBType, String schema, String name){
+        String sql = null;
+        if("GBase8AMPP".equals(DBType)){
+            sql = "SHOW CREATE FUNCTION " + schema + "." + name;
+        }else if("GaussDB".equals(DBType)){
+            //GaussDB获取函数DDL无法通过名字直接获得，需要先根据函数名字获取OBJECT_ID，然后通过OBJECT_ID再获取DDL，name字段目前是【OBJECT_ID$D$M$函数名字】的格式。
+            sql = "SELECT PG_GET_FUNCTIONDEF(" + name.split("\\$D\\$M\\$")[0] + ")";
+        }
+        return sql;
+    }
+    public static String generateAllProcedureListSqlByTableSchema(String DBType, String schema){
+        String sql = null;
+        if("GBase8AMPP".equals(DBType)){
+            sql = "SELECT ROUTINE_NAME AS FULL_PROCEDURE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE UPPER(ROUTINE_SCHEMA)=UPPER('" + schema + "') AND UPPER(ROUTINE_TYPE)=UPPER('PROCEDURE')";
+        }else if("GaussDB".equals(DBType)){
+            sql = "SELECT OBJECT_ID||'$D$M$'||OBJECT_NAME AS FULL_PROCEDURE_NAME FROM MY_OBJECTS " +
+                    "WHERE OBJECT_NAME IN ( " +
+                    "SELECT PRONAME FROM PG_PROC WHERE PRONAMESPACE IN ( " +
+                    "SELECT NAMESPACE FROM MY_OBJECTS WHERE OBJECT_NAME IN ( " +
+                    "SELECT TABLENAME FROM PG_CATALOG.PG_TABLES WHERE UPPER(SCHEMANAME)=UPPER('" + schema + "') LIMIT 1 " +
+                    ") " +
+                    "AND UPPER(OBJECT_TYPE) = 'TABLE' " +
+                    ") " +
+                    ") " +
+                    "AND UPPER(OBJECT_TYPE)='PROCEDURE'";
+        }
+        return sql;
+    }
+    public static String generateCreateProcedureSqlByTableSchemaAndName(String DBType, String schema, String name){
+        String sql = null;
+        if("GBase8AMPP".equals(DBType)){
+            sql = "SHOW CREATE PROCEDURE " + schema + "." + name;
+        }else if("GaussDB".equals(DBType)){
+            //GaussDB获取存过DDL无法通过名字直接获得，需要先根据存过名字获取OBJECT_ID，然后通过OBJECT_ID再获取DDL，name字段目前是【OBJECT_ID$D$M$存过名字】的格式。
+            //GaussDB，查函数查存过，都是这一个，不是写错了。
+            sql = "SELECT PG_GET_FUNCTIONDEF(" + name.split("\\$D\\$M\\$")[0] + ")";
+        }
+        return sql;
+    }
+    public static String generateAllViewListSqlByTableSchema(String DBType, String schema){
+        String sql = null;
+        if("GBase8AMPP".equals(DBType)){
+            sql = "SELECT TABLE_NAME AS VIEW_FULL_NAME FROM INFORMATION_SCHEMA.VIEWS WHERE UPPER(TABLE_SCHEMA)=UPPER('" + schema + "')";
+        }else if("GaussDB".equals(DBType)){
+            sql = "SELECT SCHEMANAME||'.'||VIEWNAME AS VIEW_FULL_NAME FROM PG_CATALOG.PG_VIEWS WHERE UPPER(SCHEMANAME)=UPPER('" + schema + "')";
+        }
+        return sql;
+    }
+    public static String generateCreateViewSqlByTableSchemaAndName(String DBType, String schema, String name){
+        String sql = null;
+        if("GBase8AMPP".equals(DBType)){
+            sql = "SHOW CREATE VIEW " + schema + "." + name;
+        }else if("GaussDB".equals(DBType)){
+            //GaussDB的name其实已经时schema.tablename了
+            sql = "SELECT PG_GET_VIEWDEF('" + name + "')";
+        }
+        return sql;
+    }
+    public static String generateVCList(String DBType){
+        String sql = null;
+        if("GBase8AMPP".equals(DBType)){
+            sql = "SELECT ID AS VC FROM INFORMATION_SCHEMA.VC UNION SELECT NAME AS VC FROM INFORMATION_SCHEMA.VC";
+        }
+        return sql;
+    }
 }

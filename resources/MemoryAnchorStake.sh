@@ -24,7 +24,7 @@ DEL_DATE=$(date -d "1 month ago" +%Y%m%d)
 echo "「记忆锚点」本次清理历史的日期为：${DEL_DATE}"
 find ${BACKUP_PATH} -type d -name "${DEL_DATE}*" -exec rm -rf {} \;
 
-java -Dfile.encoding=UTF-8 -jar  ${MAS_LIB_PATH}/ink.qicq.backups.jar ${DB_NAME} ${DRIVER_CLASS} ${JDBC_URL} ${USER_NAME} ${PASS_WORD} ${BACK_SCHEMA} ${BACK_DATA} ${BUFFER_SIZE} ${CONFIG_PATH} ${BACKUP_PATH}
+java -Dfile.encoding=UTF-8 -jar  ${MAS_LIB_PATH}/memory-anchor-stake.jar ${DB_NAME} ${DRIVER_CLASS} ${JDBC_URL} ${USER_NAME} ${PASS_WORD} ${BACK_SCHEMA} ${BACK_DATA} ${BUFFER_SIZE} ${CONFIG_PATH} ${BACKUP_PATH}
 
 echo "「记忆锚点」本次记忆锚点生成完毕。"
 

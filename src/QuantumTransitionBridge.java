@@ -52,7 +52,7 @@ public class QuantumTransitionBridge {
         //用来接初始化任务组线程的返回值
         List<Future> futureList = new ArrayList<Future>();
         for(int i=0;i<Integer.parseInt(ParamUtils.paramMap.get("tablePoolSize"));i++){
-            Future future = poolExecutors.submit(new InitTaskThread(ParamUtils.paramMap,i,jobMap.get(i)));
+            Future future = poolExecutors.submit(new InitQTBThread(ParamUtils.paramMap,i,jobMap.get(i)));
             futureList.add(future);
         }
         LogUtils.recordINFOLog("分配「数据拆分」任务成功，线程池已启动，开始进入包工头模式。。。","QTB");

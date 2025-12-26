@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class InitTaskThread implements Callable {
+public class InitQTBThread implements Callable {
 
     private Map<String,String> paramMap;
     private int threadId;
@@ -19,7 +19,7 @@ public class InitTaskThread implements Callable {
     private DBUtils SourceDB = new DBUtils();;
     private DBUtils TargetDB = new DBUtils();;
 
-    public InitTaskThread(Map<String,String> paramMap, int threadId, List<String> jobList) {
+    public InitQTBThread(Map<String,String> paramMap, int threadId, List<String> jobList) {
         this.paramMap = paramMap;
         this.threadId = threadId;
         this.threadName = "「第"+(threadId+1)+"号」";

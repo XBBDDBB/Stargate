@@ -16,7 +16,7 @@ echo "「记忆锚点」开始解析记忆锚点"
 
 BACKUP_DATABASE_NAME=$1
 
-java -Dfile.encoding=UTF-8 -jar  ${MAS_LIB_PATH}/ink.qicq.backups.jar MASCreateFile ${MAS_BACKUP_PATH} ${BACKUP_DATABASE_NAME} ${MAS_BACKUP_PATH}
+java -Dfile.encoding=UTF-8 -jar  ${MAS_LIB_PATH}/memory-anchor-stake.jar MASCreateFile ${MAS_BACKUP_PATH} ${BACKUP_DATABASE_NAME} ${MAS_BACKUP_PATH}
 
 echo "「记忆锚点」本次记忆锚点生成完毕。"
 
