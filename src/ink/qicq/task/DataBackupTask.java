@@ -131,8 +131,8 @@ public class DataBackupTask extends BackupTask{
                         super.dbUtils.closeAllExceptConnection();
                     }
                 }
-                super.dbUtils.closeAll();
             }
+            super.dbUtils.closeAll();
             if(bw!=null)
                 bw.close();
             if(osw!=null)

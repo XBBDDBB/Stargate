@@ -1,5 +1,6 @@
 package ink.qicq.thread;
 
+import ink.qicq.task.QTBTask;
 import ink.qicq.utils.*;
 
 import java.sql.ResultSet;
@@ -50,7 +51,7 @@ public class InitQTBThread implements Callable {
         String partitionName = null;
         String partitionId = null;
         int tempInt = 0;
-        TaskUtils taskUtils = null;
+        QTBTask qtbTask = null;
         for (String currentTable : jobList) {
             try {
                 //分隔任务列表中的表信息
@@ -117,7 +118,7 @@ public class InitQTBThread implements Callable {
                     TargetDB.closeAllExceptConnection();
                 }else if("3".equals(deleteType)){
                     LogUtils.recordINFOLog(this.threadName + "获取清理配置完毕，数据拆分前需要先智能建删分区该表，正在清理数据。。。","QTB");
-                    String datadate = paramMap.get("datadate");
+                    String datadate = paramMap.get("dataDate");
                     String evaluationId = paramMap.get("evaluationId");
                     rs = TargetDB.getNewRs(SQLUtils.generateTablePartitionTypeSqlByTableSchemaAndTableName(TargetDB.getDBName(), currentSchemaName, currentTableName));
                     while(rs.next()){
@@ -160,31 +161,33 @@ public class InitQTBThread implements Callable {
                     //或者，如果总条数，还没有缓冲区大，那还缓冲个屁了，就当全量干了
                     LogUtils.recordINFOLog(this.threadName + "数据拆分完毕，经计算，该表「" + currentTable + "」选择直接干就完了！","QTB");
                     //初始化任务组信息
-                    taskUtils = new TaskUtils();
-                    taskUtils.setSchemaName(currentSchemaName);
-                    taskUtils.setTableName(currentTableName);
-                    taskUtils.setTotalDataCount(totalCount);
-                    taskUtils.setSelectSql(selectSql.toString());
-                    taskUtils.setColumnSql(columnsSql.toString());
-                    taskUtils.setColumnList(columnList);
-                    taskUtils.setColumnMapping(columnMapping);
-                    taskUtils.setInsertSql(insertSql.toString());
-                    ParamUtils.queue.offer(taskUtils);
+                    qtbTask = new QTBTask();
+                    qtbTask.setSchemaName(currentSchemaName)
+                        .setTableName(currentTableName)
+                        .setTotalDataCount(totalCount)
+                        .setSelectSql(selectSql.toString())
+                        .setColumnSql(columnsSql.toString())
+                        .setColumnList(columnList)
+                        .setColumnMapping(columnMapping)
+                        .setInsertSql(insertSql.toString())
+                    ;
+                    ParamUtils.queue.offer(qtbTask);
                 } else if ("1".equals(paramMap.get("bufferSwitch")) && totalCount > Integer.parseInt(paramMap.get("bufferSize"))) {
                     //这里是需要走缓冲的，需要分页读取，然后再写
                     bufferForCount = (int) Math.ceil(totalCount * 1.0 / Double.parseDouble(paramMap.get("bufferSize") + ""));
                     LogUtils.recordINFOLog(this.threadName + "数据拆分完毕，经计算，该表「" + currentTable + "」每次缓冲" + paramMap.get("bufferSize") + "条总共需要获取" + bufferForCount + "次！","QTB");
                     for(int i = 0;i<bufferForCount;i++){
-                        taskUtils = new TaskUtils();
-                        taskUtils.setSchemaName(currentSchemaName);
-                        taskUtils.setTableName(currentTableName);
-                        taskUtils.setTotalDataCount(totalCount);
-                        taskUtils.setSelectSql(SQLUtils.generateTableSelectSqlWithPageNumberAndPageSize(SourceDB.getDBName(), selectSql.toString(), i, Integer.parseInt(paramMap.get("bufferSize"))));
-                        taskUtils.setColumnSql(columnsSql.toString());
-                        taskUtils.setColumnList(columnList);
-                        taskUtils.setColumnMapping(columnMapping);
-                        taskUtils.setInsertSql(insertSql.toString());
-                        ParamUtils.queue.offer(taskUtils);
+                        qtbTask = new QTBTask();
+                        qtbTask.setSchemaName(currentSchemaName)
+                            .setTableName(currentTableName)
+                            .setTotalDataCount(totalCount)
+                            .setSelectSql(SQLUtils.generateTableSelectSqlWithPageNumberAndPageSize(SourceDB.getDBName(), selectSql.toString(), i, Integer.parseInt(paramMap.get("bufferSize"))))
+                            .setColumnSql(columnsSql.toString())
+                            .setColumnList(columnList)
+                            .setColumnMapping(columnMapping)
+                            .setInsertSql(insertSql.toString())
+                        ;
+                        ParamUtils.queue.offer(qtbTask);
                     }
                 } else {
                     //这是什么玩意？？？

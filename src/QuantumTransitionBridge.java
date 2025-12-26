@@ -13,7 +13,7 @@ public class QuantumTransitionBridge {
         //args=initParam(args);
         //初始化程序
         InitUtils initUtils = InitUtils.getInstance();
-        ParamUtils.paramMap = initUtils.init(args);
+        ParamUtils.paramMap = initUtils.init(args,"QTB");
         DBUtils SourceDB = new DBUtils();
         DBUtils TargetDB = new DBUtils();
         initUtils.initDB(SourceDB,TargetDB,ParamUtils.paramMap);

@@ -19,10 +19,10 @@ SYNC_DIRECTION=$2
 DATA_DATE=$3
 EVA_ID=$4
 
-log "获取表信息成功，同步内容如下："$TABLE_LIST
-log "开始读取系统配置。。。"
+log "「量子跃迁」获取表信息成功，同步内容如下："$TABLE_LIST
+log "「量子跃迁」开始读取系统配置。。。"
 source ${QTB_CONFIG_PATH}/System.conf
-log "读取系统配置完毕，开始读取数据库配置。。。"
+log "「量子跃迁」读取系统配置完毕，开始读取数据库配置。。。"
 source ${QTB_CONFIG_PATH}/${OLTP_DB}.conf
 FIRST_DB_NAME=${DB_NAME}
 FIRST_DRIVER_CLASS=${DRIVER_CLASS}
@@ -35,16 +35,16 @@ SECOND_DRIVER_CLASS=${DRIVER_CLASS}
 SECOND_JDBC_URL=${JDBC_URL}
 SECOND_USER_NAME=${USER_NAME}
 SECOND_PASS_WORD=${PASS_WORD}
-log "数据库配置读取完毕，开始创建量子跃迁。。。"
+log "「量子跃迁」数据库配置读取完毕，开始创建量子跃迁。。。"
 
 find  $QTB_LOG_PATH -type f -name "QTB*.log" ! -mtime -14 -delete
 
 if [[ "$SYNC_DIRECTION" -eq 1 ]]; then
-  log "本次同步由「${FIRST_DB_NAME}」同步至「${SECOND_DB_NAME}」"
+  log "「量子跃迁」本次同步由「${FIRST_DB_NAME}」同步至「${SECOND_DB_NAME}」"
 elif [[ "$SYNC_DIRECTION" -eq 2 ]]; then
-  log "本次同步由「${SECOND_DB_NAME}」同步至「${FIRST_DB_NAME}」"
+  log "「量子跃迁」本次同步由「${SECOND_DB_NAME}」同步至「${FIRST_DB_NAME}」"
 else
-  log "未知同步方向，量子跃迁创建失败。"
+  log "「量子跃迁」未知同步方向，量子跃迁创建失败。"
   exit 1
 fi
 
@@ -56,8 +56,8 @@ java -Dfile.encoding=UTF-8 -jar ${QTB_LIB_PATH}/quantum-transition-bridge.jar $F
 exit_code=$?
 
 if [ $exit_code -eq 0 ]; then
-    log "量子跃迁传输完成，本次跃迁已关闭。"
+    log "「量子跃迁」量子跃迁传输完成，本次跃迁已关闭。"
 else
-    log "量子跃迁传输失败，请查看错误日志。"
+    log "「量子跃迁」量子跃迁传输失败，请查看错误日志。"
     exit 1
 fi

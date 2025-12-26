@@ -1,6 +1,7 @@
 package ink.qicq.task;
 
 import ink.qicq.utils.DBUtils;
+import ink.qicq.utils.InitUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class BackupTask {
-    public DBUtils dbUtils;
+    public DBUtils dbUtils = new DBUtils();
     public Map<String,String> paramMap;
     public StringBuffer result;
     public abstract String getObjListByUser(String DBName,String user);
@@ -25,46 +26,8 @@ public abstract class BackupTask {
     public abstract String specialTreatment(String tableName,String sql);
     public BackupTask(Map<String,String> paramMap){
         this.paramMap = paramMap;
-        this.dbUtils = new DBUtils(paramMap.get("dbName"), paramMap.get("driver"), paramMap.get("jdbcUrl"), paramMap.get("username") ,paramMap.get("password"));
-        String propertiesPath = paramMap.get("propertiesUrl") + paramMap.get("dbName") + "parameter.conf";
-        File file = new File(propertiesPath);
-        if(file.exists()){
-            FileInputStream fis = null;
-            InputStreamReader isr = null;
-            BufferedReader br = null;
-            Connection conn = null;
-            try {
-                fis = new FileInputStream(file);
-                isr = new InputStreamReader(fis);
-                br = new BufferedReader(isr);
-                String line;
-                while((line = br.readLine())!=null){
-                    conn = this.dbUtils.getConnectionIfExistTryCreated();
-                    if(conn != null){
-                        if(!"".equals(line.trim())){
-                            conn.prepareStatement(line.replace(";","")).execute();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if(br != null){
-                        br.close();
-                    }
-                    if(isr != null){
-                        isr.close();
-                    }
-                    if(fis != null){
-                        fis.close();
-                    }
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        InitUtils initUtils = InitUtils.getInstance();
+        initUtils.initDB(dbUtils,this.paramMap);
     }
 
     public String backup(String backupUser){
@@ -93,6 +56,11 @@ public abstract class BackupTask {
             }catch (Exception e){
                 result.append("用户「"+backupUser+"」对象「"+currentTableName+"」"+e.getMessage()+"。");
             }
+        }
+        try {
+            dbUtils.closeAll();
+        } catch (SQLException e) {
+            result.append("用户「"+dbUtils.getCurrentUserName()+"」关闭数据库连接失败！"+e.getMessage()+"。");
         }
         return result.toString();
     }
@@ -123,15 +91,5 @@ public abstract class BackupTask {
             osw.close();
         if(fos!=null)
             fos.close();
-    }
-
-    public String close(){
-        result = new StringBuffer("");
-        try {
-            dbUtils.closeAll();
-        } catch (SQLException e) {
-            result.append("用户「"+dbUtils.getCurrentUserName()+"」关闭数据库连接失败！"+e.getMessage()+"。");
-        }
-        return result.toString();
     }
 }

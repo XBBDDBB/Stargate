@@ -10,5 +10,5 @@ public class ParamUtils {
     public static Map<String,String> paramMap = null;
 
     //星际之门任务队列
-    public static Queue<TaskUtils> queue = new ConcurrentLinkedQueue<TaskUtils>();
+    public static Queue<Object> queue = new ConcurrentLinkedQueue<Object>();
 }

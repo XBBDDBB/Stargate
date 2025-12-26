@@ -31,19 +31,15 @@ public class MASThread implements Callable {
         LogUtils.recordINFOLog(this.threadName + "开始去数据库获取当前用户「" + backupUser + "」表级信息。。。","MAS");
         //备份表
         result.append(tableBackup.backup(backupUser));
-        result.append(tableBackup.close());
         LogUtils.recordINFOLog(this.threadName + "表级信息备份完毕，开始去数据库获取当前用户「" + backupUser + "」试图级信息。。。","MAS");
         //备份试图
         result.append(viewBackup.backup(backupUser));
-        result.append(viewBackup.close());
         LogUtils.recordINFOLog(this.threadName + "试图级信息备份完毕，开始去数据库获取当前用户「" + backupUser + "」函数级信息。。。","MAS");
         //备份函数
         result.append(functionBackup.backup(backupUser));
-        result.append(functionBackup.close());
         LogUtils.recordINFOLog(this.threadName + "函数级信息备份完毕，开始去数据库获取当前用户「" + backupUser + "」存储过程级信息。。。","MAS");
         //备份存储过程
         result.append(procedureBackup.backup(backupUser));
-        result.append(procedureBackup.close());
         LogUtils.recordINFOLog(this.threadName + "存储过程级级信息备份完毕，开始去数据库获取当前用户「" + backupUser + "」全量数据信息。。。（如果开启的话）","MAS");
         //备份全量sql数据
         if("1".equals(paramMap.get("backupData"))){

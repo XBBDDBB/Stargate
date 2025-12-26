@@ -1,10 +1,10 @@
-package ink.qicq.utils;
+package ink.qicq.task;
 
 
 import java.util.List;
 import java.util.Map;
 
-public class TaskUtils {
+public class QTBTask {
     private String schemaName;
     private String tableName;
     private Long totalDataCount;
@@ -18,64 +18,72 @@ public class TaskUtils {
         return schemaName;
     }
 
-    public void setSchemaName(String schemaName) {
+    public QTBTask setSchemaName(String schemaName) {
         this.schemaName = schemaName;
+        return this;
     }
 
     public String getTableName() {
         return tableName;
     }
 
-    public void setTableName(String tableName) {
+    public QTBTask setTableName(String tableName) {
         this.tableName = tableName;
+        return this;
     }
 
     public Long getTotalDataCount() {
         return totalDataCount;
     }
 
-    public void setTotalDataCount(Long totalDataCount) {
+    public QTBTask setTotalDataCount(Long totalDataCount) {
         this.totalDataCount = totalDataCount;
+        return this;
     }
 
     public String getColumnSql() {
         return columnSql;
     }
 
-    public void setColumnSql(String columnSql) {
+    public QTBTask setColumnSql(String columnSql) {
         this.columnSql = columnSql;
+        return this;
     }
 
     public String getSelectSql() {
         return selectSql;
     }
 
-    public void setSelectSql(String selectSql) {
+    public QTBTask setSelectSql(String selectSql) {
         this.selectSql = selectSql;
+        return this;
     }
 
     public String getInsertSql() {
         return insertSql;
     }
 
-    public void setInsertSql(String insertSql) {
+    public QTBTask setInsertSql(String insertSql) {
         this.insertSql = insertSql;
+        return this;
     }
 
     public List<String> getColumnList() {
         return columnList;
     }
 
-    public void setColumnList(List<String> columnList) {
+    public QTBTask setColumnList(List<String> columnList) {
         this.columnList = columnList;
+        return this;
     }
 
     public Map<String, String> getColumnMapping() {
         return columnMapping;
     }
 
-    public void setColumnMapping(Map<String, String> columnMapping) {
+    public QTBTask setColumnMapping(Map<String, String> columnMapping) {
         this.columnMapping = columnMapping;
+        return this;
     }
 
     @Override

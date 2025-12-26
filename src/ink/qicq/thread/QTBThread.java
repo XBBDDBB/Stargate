@@ -1,5 +1,6 @@
 package ink.qicq.thread;
 
+import ink.qicq.task.QTBTask;
 import ink.qicq.utils.*;
 
 import java.sql.PreparedStatement;
@@ -29,20 +30,20 @@ public class QTBThread implements Callable {
         initUtils.initDB(SourceDB,TargetDB,paramMap);
         LogUtils.recordINFOLog(this.threadName + "初始化数据连接成功，开始消费任务队列！","QTB");
         StringBuilder result = new StringBuilder("$O$K$");
-        TaskUtils taskUtils = null;
+        QTBTask qtbTask = null;
         ResultSet rs = null;
         PreparedStatement targetPS = null;
         int currentInt = 0;
         int commitInt = 0;
         //无限消费任务，直到任务队列为空。
-        while((taskUtils = ParamUtils.queue.poll())!=null){
+        while((qtbTask = (QTBTask) ParamUtils.queue.poll())!=null){
             try{
-                targetPS = TargetDB.getNewPst(taskUtils.getInsertSql());
-                rs = SourceDB.getNewRs(taskUtils.getSelectSql());
+                targetPS = TargetDB.getNewPst(qtbTask.getInsertSql());
+                rs = SourceDB.getNewRs(qtbTask.getSelectSql());
                 currentInt=0;
                 while (rs.next()) {
                     currentInt++;
-                    targetPS = ResultSetUtils.preparedStatementSetting(taskUtils.getColumnList(),taskUtils.getColumnMapping(),rs,targetPS,SourceDB.getDBName());
+                    targetPS = ResultSetUtils.preparedStatementSetting(qtbTask.getColumnList(),qtbTask.getColumnMapping(),rs,targetPS,SourceDB.getDBName());
                     targetPS.addBatch();
                     commitInt++;
                     if(commitInt>=Integer.parseInt(paramMap.get("commitCount"))){
