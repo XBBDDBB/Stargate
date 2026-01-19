@@ -46,7 +46,9 @@ public class ProcedureBackupTask extends BackupTask{
     @Override
     public String specialTreatment(String tableName, String sql) {
         if("GBase8AMPP".equals(super.dbUtils.getDBName())){
-            return "DROP PROCEDURE IF EXISTS "+tableName+";"+"\n"+"delimiter ;;"+"\n"+sql+"\n"+";;";
+            String dbParameter = super.paramMap.get(super.dbUtils.getDBName()+"_parameter");
+            dbParameter = dbParameter==null?"":dbParameter;
+            return dbParameter+"DROP PROCEDURE IF EXISTS "+tableName+";"+"\n"+"delimiter ;;"+"\n"+sql+"\n"+";;"+"\n"+"delimiter ;";
         }else if("GaussDB".equals(super.dbUtils.getDBName())){
             int index = sql.indexOf(",");
             sql = sql.substring(index+2);

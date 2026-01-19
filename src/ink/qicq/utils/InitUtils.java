@@ -112,16 +112,17 @@ public class InitUtils {
             System.exit(1);
         }
         //设置特殊的数据库session参数
-        this.initDBParameter(sourceDB,paramMap.get("propertiesUrl"));
-        this.initDBParameter(targetDB,paramMap.get("propertiesUrl"));
+        this.initDBParameter(sourceDB,paramMap);
+        this.initDBParameter(targetDB,paramMap);
     }
     public void initDB(DBUtils dbUtils,Map<String,String> paramMap){
         //初始化数据连接
         dbUtils.init(paramMap.get("DBName"), paramMap.get("driver"), paramMap.get("JDBCUrl"), paramMap.get("userName"), paramMap.get("password"));
         //设置特殊的数据库session参数
-        this.initDBParameter(dbUtils,paramMap.get("propertiesUrl"));
+        this.initDBParameter(dbUtils,paramMap);
     }
-    private void initDBParameter(DBUtils currentDB,String propertiesUrl){
+    private void initDBParameter(DBUtils currentDB,Map<String,String> paramMap){
+        String propertiesUrl = paramMap.get("propertiesUrl");
         String propertiesPath = propertiesUrl + currentDB.getDBName() + "parameter.conf";
         File file = new File(propertiesPath);
         if(file.exists()){
@@ -129,6 +130,8 @@ public class InitUtils {
             InputStreamReader isr = null;
             BufferedReader br = null;
             Connection conn = null;
+            String dbName = currentDB.getDBName();
+            StringBuffer sb = new StringBuffer("");
             try {
                 fis = new FileInputStream(file);
                 isr = new InputStreamReader(fis);
@@ -139,9 +142,13 @@ public class InitUtils {
                     if(conn != null){
                         if(!"".equals(line.trim())){
                             conn.prepareStatement(line.replace(";","")).execute();
+                            sb.append(line.replace(";",""));
+                            sb.append(";");
+                            sb.append("\n");
                         }
                     }
                 }
+                paramMap.put(dbName+"_parameter",sb.toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 LogUtils.recordERRORLog(currentDB.getDBName()+"初始化数据连接session参数失败："+e.getMessage(),null);
