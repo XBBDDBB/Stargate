@@ -46,6 +46,7 @@ public class FunctionBackupTask extends BackupTask{
     @Override
     public String specialTreatment(String tableName, String sql) {
         if("GBase8AMPP".equals(super.dbUtils.getDBName())){
+            //因GBase的函数可能存在CTE，所以需要在前面添加session参数防止创建时报错。
             String dbParameter = super.paramMap.get(super.dbUtils.getDBName()+"_parameter");
             dbParameter = dbParameter==null?"":dbParameter;
             return dbParameter+"DROP FUNCTION IF EXISTS "+tableName+";"+"\n"+"delimiter ;;"+"\n"+sql+"\n"+";;"+"\n"+"delimiter ;";

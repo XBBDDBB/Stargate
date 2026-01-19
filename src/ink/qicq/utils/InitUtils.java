@@ -142,6 +142,7 @@ public class InitUtils {
                     if(conn != null){
                         if(!"".equals(line.trim())){
                             conn.prepareStatement(line.replace(";","")).execute();
+                            //将执行过的session参数缓存起来，后面生成记忆锚点时需要自动添加这些参数而非手动
                             sb.append(line.replace(";",""));
                             sb.append(";");
                             sb.append("\n");
