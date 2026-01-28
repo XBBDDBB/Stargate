@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,13 +40,19 @@ public class ResultSetUtils {
                 if(object==null){
                     targetPs.setNull(j+1, Types.DECIMAL);
                 }else{
-                    targetPs.setDouble(j+1, Double.parseDouble(String.valueOf(object)));
+                    targetPs.setBigDecimal(j+1, new BigDecimal(String.valueOf(object)));
                 }
-            }else if("INTEGER".equals(columnType) || "BIGINT".equals(columnType) || "INT".equals(columnType) || "INT4".equals(columnType) || "INT8".equals(columnType)){
+            }else if("INTEGER".equals(columnType) || "INT".equals(columnType) || "INT4".equals(columnType)){
                 if(object==null){
                     targetPs.setNull(j+1, Types.INTEGER);
                 }else{
                     targetPs.setInt(j+1, Integer.parseInt(String.valueOf(object)));
+                }
+            }else if("BIGINT".equals(columnType) || "INT8".equals(columnType)){
+                if(object==null){
+                    targetPs.setNull(j+1, Types.BIGINT);
+                }else{
+                    targetPs.setLong(j+1, Long.parseLong(String.valueOf(object)));
                 }
             }else if("DATE".equals(columnType)){
                 if(object==null){
@@ -124,7 +131,7 @@ public class ResultSetUtils {
                 }else{
                     sb.append("'"+object+"'");
                 }
-            }else if("CHAR".equals(columnType)){
+            }else if("CHAR".equals(columnType) || "BPCHAR".equals(columnType)){
                 if(object==null){
                     sb.append("NULL");
                 }else{
@@ -134,13 +141,19 @@ public class ResultSetUtils {
                 if(object==null){
                     sb.append("NULL");
                 }else{
-                    sb.append(Double.parseDouble(String.valueOf(object)));
+                    sb.append(new BigDecimal(String.valueOf(object)));
                 }
-            }else if("INTEGER".equals(columnType) || "BIGINT".equals(columnType) || "INT".equals(columnType)){
+            }else if("INTEGER".equals(columnType) || "INT".equals(columnType) || "INT4".equals(columnType)){
                 if(object==null){
                     sb.append("NULL");
                 }else{
                     sb.append(Integer.parseInt(String.valueOf(object)));
+                }
+            }else if("BIGINT".equals(columnType) || "INT8".equals(columnType)){
+                if(object==null){
+                    sb.append("NULL");
+                }else{
+                    sb.append(Long.parseLong(String.valueOf(object)));
                 }
             }else if("DATE".equals(columnType)){
                 if(object==null){
