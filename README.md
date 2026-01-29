@@ -151,12 +151,15 @@ sh /xxx/xxx/Stargate/bin/AntiMemoryAnchorStake.sh 参数
 ## 📞 联系方式
 
 若有问题需要帮助，可通过以下方式联系：（有些联系方式过于逆天，可以忽略）
-- 邮箱：1245360000@qq.com
-- GitHub：https://github.com/XBBDDBB/MemoryAnchorStake
-- B站：******
-- Steam：******
-- 原神：******
-- 抖音：******
-- 英雄联盟：******
-- 三角洲行动：******
+- QQ：1245360000
+- GitHub：https://github.com/XBBDDBB/
+- B站：是兔兔宝吖
+- Steam：大白兔
+- 原神UID：203949843
+- 抖音：是兔兔宝吖
+- 英雄联盟国服：魔法猫咪QAQ
+- 三角洲行动国服：是兔兔宝吖
+- 坦克世界国服：上帝之杵天基動能武器系統
+- 守望先锋国服：是兔兔宝吖
+- 暗黑4国际服：是兔兔宝吖
 - 。。。。。。
