@@ -20,7 +20,7 @@ public class TableBackupTask extends BackupTask{
 
     @Override
     public String getObjListColumnName() {
-        if("GBase8AMPP".equals(super.dbUtils.getDBName()) || "GaussDB".equals(super.dbUtils.getDBName()) || "DM8".equals(super.dbUtils.getDBName())){
+        if("GBase8AMPP".equals(super.dbUtils.getDBName()) || "GaussDB".equals(super.dbUtils.getDBName()) || "DM8".equals(super.dbUtils.getDBName()) || "OushuDB".equals(super.dbUtils.getDBName())){
             return "TABLE_FULL_NAME";
         }
         return "ERROR";
@@ -32,7 +32,7 @@ public class TableBackupTask extends BackupTask{
             return "CREATE TABLE";
         }else if("GaussDB".equals(super.dbUtils.getDBName())){
             return "PG_GET_TABLEDEF";
-        }else if("DM8".equals(super.dbUtils.getDBName())){
+        }else if("DM8".equals(super.dbUtils.getDBName()) || "OushuDB".equals(super.dbUtils.getDBName())){
             return "TABLEDDL";
         }
         return "ERROR";
@@ -50,6 +50,8 @@ public class TableBackupTask extends BackupTask{
         }else if("GaussDB".equals(super.dbUtils.getDBName())){
             return "DROP TABLE IF EXISTS "+tableName+";"+"\n"+sql;
         }else if("DM8".equals(super.dbUtils.getDBName())){
+            return "DROP TABLE IF EXISTS "+tableName+";"+"\n"+sql;
+        }else if("OushuDB".equals(super.dbUtils.getDBName())){
             return "DROP TABLE IF EXISTS "+tableName+";"+"\n"+sql;
         }
         return sql;

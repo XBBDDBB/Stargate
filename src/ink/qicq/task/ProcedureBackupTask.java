@@ -22,7 +22,7 @@ public class ProcedureBackupTask extends BackupTask{
 
     @Override
     public String getObjListColumnName() {
-        if("GBase8AMPP".equals(super.dbUtils.getDBName()) || "GaussDB".equals(super.dbUtils.getDBName()) || "DM8".equals(super.dbUtils.getDBName())){
+        if("GBase8AMPP".equals(super.dbUtils.getDBName()) || "GaussDB".equals(super.dbUtils.getDBName()) || "DM8".equals(super.dbUtils.getDBName()) || "OushuDB".equals(super.dbUtils.getDBName())){
             return "FULL_PROCEDURE_NAME";
         }
         return "ERROR";
@@ -34,7 +34,7 @@ public class ProcedureBackupTask extends BackupTask{
             return "CREATE PROCEDURE";
         }else if("GaussDB".equals(super.dbUtils.getDBName())){
             return "PG_GET_FUNCTIONDEF";
-        }else if("DM8".equals(super.dbUtils.getDBName())){
+        }else if("DM8".equals(super.dbUtils.getDBName()) || "OushuDB".equals(super.dbUtils.getDBName())){
             return "PROCDDL";
         }
         return "ERROR";
@@ -59,6 +59,10 @@ public class ProcedureBackupTask extends BackupTask{
         }else if("DM8".equals(super.dbUtils.getDBName())){
             //DM8的存储过程自带CREATE OR REPLACE，所以这里什么都不加了。
             return sql;
+        }else if("OushuDB".equals(super.dbUtils.getDBName())){
+            //OushuDB实在是太烂了。。。
+            String tmpSql = "-- 这个烂库我没找到怎么直接生成DDL，目前函数和存储过程都只有里面的内容，最外面的定义以及参数目前获取不到，临时使用后续找到办法了再改吧。";
+            return tmpSql+"\n"+sql;
         }
         return sql;
     }

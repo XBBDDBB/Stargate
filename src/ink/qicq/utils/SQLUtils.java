@@ -9,12 +9,14 @@ public class SQLUtils {
             sql = "SELECT COLUMN_NAME,DATA_TYPE FROM PG_CATALOG.MY_TAB_COLUMNS WHERE UPPER(SCHEMA)='" + schema + "' AND UPPER(TABLE_NAME)='" + name + "' ORDER BY COLUMN_ID";
         }else if("DM8".equals(DBType)){
             sql = "SELECT COLUMN_NAME,DATA_TYPE FROM ALL_TAB_COLUMNS WHERE UPPER(OWNER)='" + schema + "' AND UPPER(TABLE_NAME)='" + name + "' ORDER BY COLUMN_ID";
+        }else if("OushuDB".equals(DBType)){
+            sql = "SELECT COLUMN_NAME,DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE UPPER(TABLE_SCHEMA)='" + schema + "' AND UPPER(TABLE_NAME)='" + name + "' ORDER BY ORDINAL_POSITION";
         }
         return sql;
     }
     public static String generateTableCountSqlByTableSchemaAndTableName(String DBType, String schema, String name){
         String sql = null;
-        if("GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType) || "DM8".equals(DBType)){
+        if("GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType) || "DM8".equals(DBType) || "OushuDB".equals(DBType)){
             sql = "SELECT COUNT(*) AS CT FROM "+schema+"."+name;
         }
         return sql;
@@ -27,19 +29,22 @@ public class SQLUtils {
             sql = oriSql+" ORDER BY CTID LIMIT "+(pageNumber*pageSize)+","+pageSize;
         }else if("DM8".equals(DBType)){
             sql = oriSql+" ORDER BY ROWID LIMIT "+(pageNumber*pageSize)+","+pageSize;
+        }else if("OushuDB".equals(DBType)){
+            //这里可能会有问题，当OushuDB采用AO/列存/ORC表时，数仓大表格式appendonly=true，存储是按列/批量追加的，不再是传统的块+行结构，会为了写入性能牺牲了ctid等物理定位能力，固定(0,0)不再代表真实物理地址。
+            sql = oriSql+" ORDER BY GP_SEGMENT_ID,CTID LIMIT "+(pageNumber*pageSize)+","+pageSize;
         }
         return sql;
     }
     public static String generateTableDeleteSqlByTableSchemaAndTableName(String DBType, String schema, String name){
         String sql = null;
-        if("GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType) || "DM8".equals(DBType)){
+        if("GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType) || "DM8".equals(DBType) || "OushuDB".equals(DBType)){
             sql = "DELETE FROM "+schema+"."+name;
         }
         return sql;
     }
     public static String generateTableTruncateSqlByTableSchemaAndTableName(String DBType, String schema, String name){
         String sql = null;
-        if("GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType) || "DM8".equals(DBType)){
+        if("GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType) || "DM8".equals(DBType) || "OushuDB".equals(DBType)){
             sql = "TRUNCATE TABLE "+schema+"."+name;
         }
         return sql;
@@ -83,7 +88,9 @@ public class SQLUtils {
         }else if("GaussDB".equals(DBType)){
             sql = "SELECT SCHEMANAME||'.'||TABLENAME AS TABLE_FULL_NAME FROM PG_CATALOG.PG_TABLES WHERE UPPER(SCHEMANAME)=UPPER('" + schema + "')";
         }else if("DM8".equals(DBType)){
-            sql = "select TABLE_NAME AS TABLE_FULL_NAME from SYS.ALL_TABLES WHERE UPPER(OWNER)=UPPER('" + schema + "')";
+            sql = "SELECT TABLE_NAME AS TABLE_FULL_NAME FROM SYS.ALL_TABLES WHERE UPPER(OWNER)=UPPER('" + schema + "')";
+        }else if("OushuDB".equals(DBType)){
+            sql = "SELECT TABLE_NAME AS TABLE_FULL_NAME FROM INFORMATION_SCHEMA.TABLES WHERE UPPER(TABLE_SCHEMA)=UPPER('" + schema + "') AND UPPER(TABLE_TYPE)=UPPER('BASE TABLE')";
         }
         return sql;
     }
@@ -96,6 +103,8 @@ public class SQLUtils {
             sql = "SELECT PG_GET_TABLEDEF('" +  name + "')";
         }else if("DM8".equals(DBType)){
             sql = "SELECT DBMS_METADATA.GET_DDL('TABLE', '" + name + "', '" + schema + "') AS TABLEDDL  FROM DUAL";
+        }else if("OushuDB".equals(DBType)){
+            sql = "SELECT SHOW_CREATETABLE('" + schema + "." + name + "') AS TABLEDDL";
         }
         return sql;
     }
@@ -116,6 +125,9 @@ public class SQLUtils {
                     "AND UPPER(OBJECT_TYPE)='FUNCTION'";
         }else if("DM8".equals(DBType)){
             sql = "SELECT OBJECT_NAME AS FULL_FUNCTION_NAME FROM SYS.ALL_PROCEDURES WHERE UPPER(OWNER)=UPPER('" + schema + "') AND UPPER(OBJECT_TYPE)=UPPER('FUNCTION')";
+        }else if("OushuDB".equals(DBType)){
+            //OushuDB比较特殊，他不分函数和存储过程，都叫函数，所以这里既包括函数也包括存储过存，后续存储过从那里永远都是空。
+            sql = "SELECT ROUTINE_NAME AS FULL_FUNCTION_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE UPPER(ROUTINE_SCHEMA)=UPPER('" + schema + "') AND UPPER(ROUTINE_TYPE)=UPPER('FUNCTION')";
         }
         return sql;
     }
@@ -128,6 +140,9 @@ public class SQLUtils {
             sql = "SELECT PG_GET_FUNCTIONDEF(" + name.split("\\$D\\$M\\$")[0] + ")";
         }else if("DM8".equals(DBType)){
             sql = "SELECT DBMS_METADATA.GET_DDL('FUNCTION', '" + name + "', '" + schema + "') AS FUNCDDL  FROM DUAL";
+        }else if("OushuDB".equals(DBType)){
+            //OushuDB比较特殊，阉割了很多底层函数，至今没找到生成完整函数、存过DDL的方法，临时用一个阉割版的内容替代。
+            sql = "SELECT A.PROSRC AS FUNCDDL FROM PG_CATALOG.PG_PROC A INNER JOIN PG_CATALOG.PG_NAMESPACE B ON A.PRONAMESPACE = B.OID WHERE UPPER(B.NSPNAME)='" + schema + "' AND UPPER(A.PRONAME) ='" + name + "'";
         }
         return sql;
     }
@@ -148,6 +163,9 @@ public class SQLUtils {
                     "AND UPPER(OBJECT_TYPE)='PROCEDURE'";
         }else if("DM8".equals(DBType)){
             sql = "SELECT OBJECT_NAME AS FULL_PROCEDURE_NAME FROM SYS.ALL_PROCEDURES WHERE UPPER(OWNER)=UPPER('" + schema + "') AND UPPER(OBJECT_TYPE)=UPPER('PROCEDURE')";
+        }else if("OushuDB".equals(DBType)){
+            //OushuDB比较特殊，他不分函数和存储过程，都叫函数，这里永远也查不出来东西，存储过程都在函数那里处理好了。
+            sql = "SELECT ROUTINE_NAME AS FULL_PROCEDURE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE UPPER(ROUTINE_SCHEMA)=UPPER('" + schema + "') AND UPPER(ROUTINE_TYPE)=UPPER('PROCEDURE')";
         }
         return sql;
     }
@@ -161,6 +179,9 @@ public class SQLUtils {
             sql = "SELECT PG_GET_FUNCTIONDEF(" + name.split("\\$D\\$M\\$")[0] + ")";
         }else if("DM8".equals(DBType)){
             sql = "SELECT DBMS_METADATA.GET_DDL('PROCEDURE', '" + name + "', '" + schema + "') AS PROCDDL  FROM DUAL";
+        }else if("OushuDB".equals(DBType)){
+            //OushuDB比较特殊，他不分函数和存储过程，都叫函数，这里永远也查不出来东西，存储过程都在函数那里处理好了。
+            sql = "SELECT A.PROSRC AS PROCDDL FROM PG_CATALOG.PG_PROC A INNER JOIN PG_CATALOG.PG_NAMESPACE B ON A.PRONAMESPACE = B.OID WHERE UPPER(B.NSPNAME)='" + schema + "' AND UPPER(A.PRONAME) ='" + name + "'";
         }
         return sql;
     }
@@ -172,6 +193,8 @@ public class SQLUtils {
             sql = "SELECT SCHEMANAME||'.'||VIEWNAME AS VIEW_FULL_NAME FROM PG_CATALOG.PG_VIEWS WHERE UPPER(SCHEMANAME)=UPPER('" + schema + "')";
         }else if("DM8".equals(DBType)){
             sql = "SELECT VIEW_NAME AS VIEW_FULL_NAME FROM SYS.ALL_VIEWS WHERE UPPER(OWNER)=UPPER('" + schema + "')";
+        }else if("OushuDB".equals(DBType)){
+            sql = "SELECT TABLE_NAME AS VIEW_FULL_NAME FROM INFORMATION_SCHEMA.VIEWS WHERE UPPER(TABLE_SCHEMA)=UPPER('" + schema + "')";
         }
         return sql;
     }
@@ -184,6 +207,8 @@ public class SQLUtils {
             sql = "SELECT PG_GET_VIEWDEF('" + name + "')";
         }else if("DM8".equals(DBType)){
             sql = "SELECT DBMS_METADATA.GET_DDL('VIEW', '" + name + "', '" + schema + "') AS VIEWDDL  FROM DUAL";
+        }else if("OushuDB".equals(DBType)){
+            sql = "SELECT PG_GET_VIEWDEF('" + schema + "." + name + "') AS VIEWDDL";
         }
         return sql;
     }
