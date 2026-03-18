@@ -26,7 +26,7 @@ public class ViewBackupTask extends BackupTask{
 
     @Override
     public String getObjListColumnName() {
-        if("GBase8AMPP".equals(super.dbUtils.getDBName()) || "GaussDB".equals(super.dbUtils.getDBName())){
+        if("GBase8AMPP".equals(super.dbUtils.getDBName()) || "GaussDB".equals(super.dbUtils.getDBName()) || "DM8".equals(super.dbUtils.getDBName())){
             return "VIEW_FULL_NAME";
         }
         return "ERROR";
@@ -38,6 +38,8 @@ public class ViewBackupTask extends BackupTask{
             return "CREATE VIEW";
         }else if("GaussDB".equals(super.dbUtils.getDBName())){
             return "PG_GET_VIEWDEF";
+        }else if("GaussDB".equals(super.dbUtils.getDBName())){
+            return "VIEWDDL";
         }
         return "ERROR";
     }
@@ -68,6 +70,9 @@ public class ViewBackupTask extends BackupTask{
             return "DROP VIEW IF EXISTS "+tableName+";"+"\n"+sql+";";
         }else if("GaussDB".equals(super.dbUtils.getDBName())){
             return "DROP VIEW IF EXISTS "+tableName+";"+"\n"+"CREATE VIEW "+tableName+" AS "+sql;
+        }else if("DM8".equals(super.dbUtils.getDBName())){
+            //DM8的视图自带CREATE OR REPLACE，所以这里什么都不加了。
+            return sql;
         }
         return sql;
     }

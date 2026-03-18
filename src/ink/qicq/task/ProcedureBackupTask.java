@@ -22,7 +22,7 @@ public class ProcedureBackupTask extends BackupTask{
 
     @Override
     public String getObjListColumnName() {
-        if("GBase8AMPP".equals(super.dbUtils.getDBName()) || "GaussDB".equals(super.dbUtils.getDBName())){
+        if("GBase8AMPP".equals(super.dbUtils.getDBName()) || "GaussDB".equals(super.dbUtils.getDBName()) || "DM8".equals(super.dbUtils.getDBName())){
             return "FULL_PROCEDURE_NAME";
         }
         return "ERROR";
@@ -34,6 +34,8 @@ public class ProcedureBackupTask extends BackupTask{
             return "CREATE PROCEDURE";
         }else if("GaussDB".equals(super.dbUtils.getDBName())){
             return "PG_GET_FUNCTIONDEF";
+        }else if("DM8".equals(super.dbUtils.getDBName())){
+            return "PROCDDL";
         }
         return "ERROR";
     }
@@ -54,6 +56,9 @@ public class ProcedureBackupTask extends BackupTask{
             int index = sql.indexOf(",");
             sql = sql.substring(index+2);
             return sql.substring(0,sql.length()-2);
+        }else if("DM8".equals(super.dbUtils.getDBName())){
+            //DM8的存储过程自带CREATE OR REPLACE，所以这里什么都不加了。
+            return sql;
         }
         return sql;
     }

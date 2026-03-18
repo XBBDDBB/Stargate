@@ -5,41 +5,41 @@ public class SQLUtils {
         String sql = null;
         if("GBase8AMPP".equals(DBType)){
             sql = "SELECT COLUMN_NAME,DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE UPPER(TABLE_SCHEMA)='" + schema + "' AND UPPER(TABLE_NAME)='" + name + "' ORDER BY ORDINAL_POSITION";
-        }else if("DM8".equals(DBType)){
-            sql = "SELECT COLUMN_NAME,DATA_TYPE FROM ALL_TAB_COLUMNS WHERE UPPER(OWNER)='" + schema + "' AND UPPER(TABLE_NAME)='" + name + "' ORDER BY COLUMN_ID";
         }else if("GaussDB".equals(DBType)){
             sql = "SELECT COLUMN_NAME,DATA_TYPE FROM PG_CATALOG.MY_TAB_COLUMNS WHERE UPPER(SCHEMA)='" + schema + "' AND UPPER(TABLE_NAME)='" + name + "' ORDER BY COLUMN_ID";
+        }else if("DM8".equals(DBType)){
+            sql = "SELECT COLUMN_NAME,DATA_TYPE FROM ALL_TAB_COLUMNS WHERE UPPER(OWNER)='" + schema + "' AND UPPER(TABLE_NAME)='" + name + "' ORDER BY COLUMN_ID";
         }
         return sql;
     }
     public static String generateTableCountSqlByTableSchemaAndTableName(String DBType, String schema, String name){
         String sql = null;
-        if("DM8".equals(DBType) || "GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType)){
+        if("GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType) || "DM8".equals(DBType)){
             sql = "SELECT COUNT(*) AS CT FROM "+schema+"."+name;
         }
         return sql;
     }
     public static String generateTableSelectSqlWithPageNumberAndPageSize(String DBType, String oriSql, int pageNumber, int pageSize){
         String sql = null;
-        if("DM8".equals(DBType)){
-            sql = oriSql+" LIMIT "+(pageNumber*pageSize)+","+pageSize;
+        if("GBase8AMPP".equals(DBType)){
+            sql = oriSql+" ORDER BY ROWID,SEGMENT_ID LIMIT "+(pageNumber*pageSize)+","+pageSize;
         }else if("GaussDB".equals(DBType)){
             sql = oriSql+" ORDER BY CTID LIMIT "+(pageNumber*pageSize)+","+pageSize;
-        }else if("GBase8AMPP".equals(DBType)){
-            sql = oriSql+" ORDER BY ROWID,SEGMENT_ID LIMIT "+(pageNumber*pageSize)+","+pageSize;
+        }else if("DM8".equals(DBType)){
+            sql = oriSql+" ORDER BY ROWID LIMIT "+(pageNumber*pageSize)+","+pageSize;
         }
         return sql;
     }
     public static String generateTableDeleteSqlByTableSchemaAndTableName(String DBType, String schema, String name){
         String sql = null;
-        if("GBase8AMPP".equals(DBType) || "DM8".equals(DBType) || "GaussDB".equals(DBType)){
+        if("GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType) || "DM8".equals(DBType)){
             sql = "DELETE FROM "+schema+"."+name;
         }
         return sql;
     }
     public static String generateTableTruncateSqlByTableSchemaAndTableName(String DBType, String schema, String name){
         String sql = null;
-        if("GBase8AMPP".equals(DBType) || "DM8".equals(DBType) || "GaussDB".equals(DBType)){
+        if("GBase8AMPP".equals(DBType) || "GaussDB".equals(DBType) || "DM8".equals(DBType)){
             sql = "TRUNCATE TABLE "+schema+"."+name;
         }
         return sql;
@@ -82,6 +82,8 @@ public class SQLUtils {
             sql = "SELECT TABLE_NAME AS TABLE_FULL_NAME FROM INFORMATION_SCHEMA.TABLES WHERE UPPER(TABLE_SCHEMA)=UPPER('" + schema + "') AND UPPER(TABLE_TYPE)=UPPER('BASE TABLE')";
         }else if("GaussDB".equals(DBType)){
             sql = "SELECT SCHEMANAME||'.'||TABLENAME AS TABLE_FULL_NAME FROM PG_CATALOG.PG_TABLES WHERE UPPER(SCHEMANAME)=UPPER('" + schema + "')";
+        }else if("DM8".equals(DBType)){
+            sql = "select TABLE_NAME AS TABLE_FULL_NAME from SYS.ALL_TABLES WHERE UPPER(OWNER)=UPPER('" + schema + "')";
         }
         return sql;
     }
@@ -92,6 +94,8 @@ public class SQLUtils {
         }else if("GaussDB".equals(DBType)){
             //GaussDB的name其实已经时schema.tablename了
             sql = "SELECT PG_GET_TABLEDEF('" +  name + "')";
+        }else if("DM8".equals(DBType)){
+            sql = "SELECT DBMS_METADATA.GET_DDL('TABLE', '" + name + "', '" + schema + "') AS TABLEDDL  FROM DUAL";
         }
         return sql;
     }
@@ -110,6 +114,8 @@ public class SQLUtils {
                     ") " +
                     ") " +
                     "AND UPPER(OBJECT_TYPE)='FUNCTION'";
+        }else if("DM8".equals(DBType)){
+            sql = "SELECT OBJECT_NAME AS FULL_FUNCTION_NAME FROM SYS.ALL_PROCEDURES WHERE UPPER(OWNER)=UPPER('" + schema + "') AND UPPER(OBJECT_TYPE)=UPPER('FUNCTION')";
         }
         return sql;
     }
@@ -120,6 +126,8 @@ public class SQLUtils {
         }else if("GaussDB".equals(DBType)){
             //GaussDB获取函数DDL无法通过名字直接获得，需要先根据函数名字获取OBJECT_ID，然后通过OBJECT_ID再获取DDL，name字段目前是【OBJECT_ID$D$M$函数名字】的格式。
             sql = "SELECT PG_GET_FUNCTIONDEF(" + name.split("\\$D\\$M\\$")[0] + ")";
+        }else if("DM8".equals(DBType)){
+            sql = "SELECT DBMS_METADATA.GET_DDL('FUNCTION', '" + name + "', '" + schema + "') AS FUNCDDL  FROM DUAL";
         }
         return sql;
     }
@@ -138,6 +146,8 @@ public class SQLUtils {
                     ") " +
                     ") " +
                     "AND UPPER(OBJECT_TYPE)='PROCEDURE'";
+        }else if("DM8".equals(DBType)){
+            sql = "SELECT OBJECT_NAME AS FULL_PROCEDURE_NAME FROM SYS.ALL_PROCEDURES WHERE UPPER(OWNER)=UPPER('" + schema + "') AND UPPER(OBJECT_TYPE)=UPPER('PROCEDURE')";
         }
         return sql;
     }
@@ -149,6 +159,8 @@ public class SQLUtils {
             //GaussDB获取存过DDL无法通过名字直接获得，需要先根据存过名字获取OBJECT_ID，然后通过OBJECT_ID再获取DDL，name字段目前是【OBJECT_ID$D$M$存过名字】的格式。
             //GaussDB，查函数查存过，都是这一个，不是写错了。
             sql = "SELECT PG_GET_FUNCTIONDEF(" + name.split("\\$D\\$M\\$")[0] + ")";
+        }else if("DM8".equals(DBType)){
+            sql = "SELECT DBMS_METADATA.GET_DDL('PROCEDURE', '" + name + "', '" + schema + "') AS PROCDDL  FROM DUAL";
         }
         return sql;
     }
@@ -158,6 +170,8 @@ public class SQLUtils {
             sql = "SELECT TABLE_NAME AS VIEW_FULL_NAME FROM INFORMATION_SCHEMA.VIEWS WHERE UPPER(TABLE_SCHEMA)=UPPER('" + schema + "')";
         }else if("GaussDB".equals(DBType)){
             sql = "SELECT SCHEMANAME||'.'||VIEWNAME AS VIEW_FULL_NAME FROM PG_CATALOG.PG_VIEWS WHERE UPPER(SCHEMANAME)=UPPER('" + schema + "')";
+        }else if("DM8".equals(DBType)){
+            sql = "SELECT VIEW_NAME AS VIEW_FULL_NAME FROM SYS.ALL_VIEWS WHERE UPPER(OWNER)=UPPER('" + schema + "')";
         }
         return sql;
     }
@@ -168,6 +182,8 @@ public class SQLUtils {
         }else if("GaussDB".equals(DBType)){
             //GaussDB的name其实已经时schema.tablename了
             sql = "SELECT PG_GET_VIEWDEF('" + name + "')";
+        }else if("DM8".equals(DBType)){
+            sql = "SELECT DBMS_METADATA.GET_DDL('VIEW', '" + name + "', '" + schema + "') AS VIEWDDL  FROM DUAL";
         }
         return sql;
     }
