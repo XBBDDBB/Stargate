@@ -50,7 +50,7 @@ public class TableBackupTask extends BackupTask{
         }else if("GaussDB".equals(super.dbUtils.getDBName())){
             return "DROP TABLE IF EXISTS "+tableName+";"+"\n"+sql;
         }else if("DM8".equals(super.dbUtils.getDBName())){
-            return "DROP TABLE IF EXISTS "+tableName+";"+"\n"+sql;
+            return "DROP TABLE IF EXISTS "+tableName+";"+"\n"+sql.replace("\"","");
         }else if("OushuDB".equals(super.dbUtils.getDBName())){
             return "DROP TABLE IF EXISTS "+tableName+";"+"\n"+sql;
         }

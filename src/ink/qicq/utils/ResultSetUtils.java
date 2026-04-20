@@ -20,7 +20,7 @@ public class ResultSetUtils {
             Object object = sourceRS.getObject(columnList.get(j));
             //当前列类型
             String columnType = columnMapping.get(columnList.get(j)).toString();
-            if("VARCHAR".equals(columnType) || "VARCHAR2".equals(columnType) || "TEXT".equals(columnType)){
+            if("VARCHAR".equals(columnType) || "VARCHAR2".equals(columnType) || "TEXT".equals(columnType) || "CHARACTER VARYING".equals(columnType)){
                 if(object instanceof Clob){
                     //如果后续其他数据中instanceof判断实效，可用sourceDBName强制根据数据库名字判断
                     object = ((Clob) object).getSubString(1, (int) ((Clob) object).length());
@@ -108,6 +108,8 @@ public class ResultSetUtils {
                 }else{
                     targetPs.setClob(j+1, (Clob) object);
                 }
+            }else{
+                targetPs.setObject(j+1, object);
             }
         }
         return targetPs;
@@ -121,7 +123,7 @@ public class ResultSetUtils {
             Object object = sourceRS.getObject(columnList.get(j));
             //当前列类型
             String columnType = columnMapping.get(columnList.get(j)).toString();
-            if("VARCHAR".equals(columnType) || "VARCHAR2".equals(columnType) || "TEXT".equals(columnType)){
+            if("VARCHAR".equals(columnType) || "VARCHAR2".equals(columnType) || "TEXT".equals(columnType) || "CHARACTER VARYING".equals(columnType)){
                 if(object instanceof Clob){
                     //如果后续其他数据中instanceof判断实效，可用sourceDBName强制根据数据库名字判断
                     object = ((Clob) object).getSubString(1, (int) ((Clob) object).length());
@@ -207,6 +209,8 @@ public class ResultSetUtils {
                     String content = temp.toString();
                     sb.append("'"+content+"'");
                 }
+            }else{
+                sb.append("'"+object+"'");
             }
             sb.append(",");
         }
