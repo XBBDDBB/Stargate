@@ -1,5 +1,5 @@
 # 「星际之门」Stargate
-##  旗下分为：「量子跃迁」「记忆锚点」
+##  旗下分为：「量子跃迁」「记忆锚点」「指令靶向」
 ## 📋 项目介绍
 # 「量子跃迁(桥)」QuantumTransitionBridge
 #### 什么？要让我把前台应用和后台批量分别使用不同的数据库？？？而且还是一个mysql系一个pg系？？？什么？？？我司产品不支持多数据源？？？那我怎么把批量跑出来的结果，丢给前台应用供其查看啊？？？🤷要不你整死我吧
@@ -17,6 +17,13 @@
 #### 现在有了「记忆锚点桩」，将你的「记忆」定时的创建「锚点」，使其钉死在「世界树」上。当你想要寻找「失去」的记忆时，可直接使用「锚点」找回当时的自己！
 #### 「记忆锚点桩」支持按照死该马（Schema）、按照Type（表、视图、函数、存储过程）、按照奥不债（Object）名字，分类逐一备份DDL。我们把这一过程叫做生成记忆锚点，在您需要时，可对单一对象进行查看及手动恢复。
 #### 支持依赖过往「记忆锚点」通过解析树桩、树杈、树枝、树叶，反向生成上线初始化所用的全库DDL脚本。我们把这一过程叫做反记忆锚点。
+# 「指令靶向(针)」CommandTargetingNeedle
+#### 完犊子了，我想执行个sql没有地方让我执行，权限都封死了，好可恶！
+#### 完犊子了，我只需要稍微调整一个小东西，就可以避免一个大灾难，但是，我动不了！
+#### 完犊子了，！@#¥%……&*()_+
+#### 啊哈！
+#### 现在有了「指令靶向针」，将你的「指令」，在细胞分子水平上，使用「靶向」治疗的方式，治愈自己的晚期癌症！
+#### 那种在绝望当中的光明，那种在饥饿当中的麦当劳，他的味道你知道！
 
 ## 📦 源码项目结构
 ```
@@ -36,7 +43,8 @@ Stargate/
 │   ├── Target2SourceSingle.sh      # 从「目标」到「源」反向开启量子跃迁桥(单量子)
 │   ├── QuantumTransitionBrideg.sh  # 量子跃迁桥启动脚本
 │   ├── MemoryAnchorStake.sh        # 记忆锚点启动脚本
-│   └── AntiMemoryAnchorStake.sh    # 反记忆锚点启动脚本
+│   ├── AntiMemoryAnchorStake.sh    # 反记忆锚点启动脚本
+│   └── CommandTargetingNeedle.sh   # 指令靶向针启动脚本
 ├── src/                            # 源码目录
 │   ├── ink.qicq/
 │   │   ├── task/                       # 任务模块
@@ -44,6 +52,7 @@ Stargate/
 │   │   └── utils/                      # 工具类
 │   ├── QuantumTransitionBrideg.java    # 量子跃迁程序入口
 │   ├── MemoryAnchorStake.java          # 记忆锚点程序入口
+│   ├── CommandTargetingNeedle.java     # 指令靶向程序入口
 │   └── XXX.META-INF/
 │           └── MANIFEST.MF
 ├── LICENSE
@@ -59,7 +68,8 @@ Stargate/
 │   ├── Target2SourceSingle.sh          # 从「目标」到「源」反向开启量子跃迁桥(单量子)
 │   ├── QuantumTransitionBrideg.sh      # 量子跃迁桥启动脚本
 │   ├── MemoryAnchorStake.sh            # 记忆锚点启动脚本
-│   └── AntiMemoryAnchorStake.sh        # 反记忆锚点启动脚本
+│   ├── AntiMemoryAnchorStake.sh        # 反记忆锚点启动脚本
+│   └── CommandTargetingNeedle.sh       # 指令靶向针启动脚本
 ├── backups/                            # 记忆锚点存放路径
 │   ├── XXXX1/                          # 自动生成，只举例子用。
 │   │   ├── yyyyMMddHHmmss/             # 自动生成，只举例子用。
@@ -81,7 +91,8 @@ Stargate/
 ├── lib/                                # 存放量子跃迁桥主程序
 │   ├── function.conf                   # 封装的一些shell命令
 │   ├── quantum-transition-bridge.jar   # 量子跃迁主程序
-│   └── memory-anchor-stake.jar         # 记忆锚点主程序
+│   ├── memory-anchor-stake.jar         # 记忆锚点主程序
+│   └── command-targeting-needle.jar    # 指令靶向主程序
 └── config/
     ├── System.conf                     # 星际之门配置文件
     ├── XXXX.conf                       # 数据库配置文件
@@ -112,6 +123,13 @@ xxxxxxxx sh /xxx/xxx/Stargate/bin/MemoryAnchorStake.sh 参数
 sh /xxx/xxx/Stargate/bin/AntiMemoryAnchorStake.sh 参数
 #参数说明
 传你想要生成记忆锚点的数据库名字
+```
+### 如何使用指令靶向
+```bash
+sh /xxx/xxx/Stargate/bin/CommandTargetingNeedle.sh 参数 "SQL" 
+
+#参数说明
+传你想要靶向的数据库名字
 ```
 ## ⚙️ 配置文件说明
 

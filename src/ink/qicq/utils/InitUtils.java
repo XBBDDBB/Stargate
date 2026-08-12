@@ -31,7 +31,21 @@ public class InitUtils {
             paramMap = this.initQTB(args);
         }else if("MAS".equals(systemId)){
             paramMap = this.initMAS(args);
+        }else if("CTN".equals(systemId)){
+            paramMap = this.initCTN(args);
         }
+        return paramMap;
+    }
+    private Map<String,String> initCTN(String[] args){
+        LogUtils.recordINFOLog("正在初始化参数。。。","CTN");
+        Map<String,String> paramMap = new HashMap<String,String>();
+        paramMap.put("DBName",args[0]);//数据库的名字
+        paramMap.put("driver",args[1]);//数据库的驱动类
+        paramMap.put("JDBCUrl",args[2]);//数据库的jdbc串
+        paramMap.put("userName",args[3]);//数据库的用户名
+        paramMap.put("password",args[4]);//数据库的密码
+        paramMap.put("propertiesUrl",args[5]);//配置文件的路径
+        paramMap.put("execSql",args[6]);//配置文件的路径
         return paramMap;
     }
     private Map<String,String> initMAS(String[] args){

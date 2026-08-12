@@ -6,6 +6,8 @@ public class LogUtils {
             return "「量子跃迁」";
         }else if("MAS".equals(systemId)){
             return "「记忆锚点」";
+        }else if("CTN".equals(systemId)){
+            return "「指令靶向」";
         }else{
             return "「星际之门」";
         }

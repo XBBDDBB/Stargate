@@ -16,7 +16,7 @@ source ${MAS_LIB_PATH}/function.conf
 log "「记忆锚点」开始生成记忆锚点"
 
 source ${MAS_CONFIG_PATH}/System.conf
-source ${MAS_CONFIG_PATH}/$1
+source ${MAS_CONFIG_PATH}/$1.conf
 
 BACKUP_PATH=${MAS_BACKUP_PATH}/${DB_NAME}/
 CONFIG_PATH=${MAS_CONFIG_PATH}/

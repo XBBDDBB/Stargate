@@ -17,7 +17,6 @@ public class MemoryAnchorStake {
         long startTime = System.currentTimeMillis();
         //开发测试专用，生产需要注释掉本代码
         //args=initParam(args);
-        //args=initParam(args);
         //args=initParam2(args);
         //初始化程序
         InitUtils initUtils = InitUtils.getInstance();
