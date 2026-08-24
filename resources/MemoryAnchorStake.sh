@@ -27,6 +27,14 @@ find ${BACKUP_PATH} -type d -name "${DEL_DATE}*" -exec rm -rf {} \;
 
 java -Dfile.encoding=UTF-8 -jar  ${MAS_LIB_PATH}/memory-anchor-stake.jar ${DB_NAME} ${DRIVER_CLASS} ${JDBC_URL} ${USER_NAME} ${PASS_WORD} ${BACK_SCHEMA} ${BACK_DATA} ${BUFFER_SIZE} ${CONFIG_PATH} ${BACKUP_PATH}
 
-log "「记忆锚点」本次记忆锚点生成完毕。"
+exit_code=$?
+
+if [ $exit_code -eq 0 ]; then
+    log "「记忆锚点」本次记忆锚点生成完毕。"
+else
+    log "「记忆锚点」本次记忆锚点生成失败！"
+    exit 1
+fi
+
 
 

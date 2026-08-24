@@ -22,3 +22,12 @@ CONFIG_PATH=${CTN_CONFIG_PATH}/
 EXEC_SQL=$2
 
 java -Dfile.encoding=UTF-8 -jar  ${CTN_LIB_PATH}/command-targeting-needle.jar ${DB_NAME} ${DRIVER_CLASS} ${JDBC_URL} ${USER_NAME} ${PASS_WORD} ${CONFIG_PATH} "${EXEC_SQL}"
+
+exit_code=$?
+
+if [ $exit_code -eq 0 ]; then
+    log "「指令靶向」本次指令靶向治疗完毕。"
+else
+    log "「指令靶向」本次指令靶向治疗失败！"
+    exit 1
+fi

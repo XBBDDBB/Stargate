@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map;
 
 public class AntiMAS {
@@ -21,8 +22,11 @@ public class AntiMAS {
         LogUtils.recordINFOLog("初始化参数完毕！本次读取的锚点为"+paramMap.get("MASBackupUrl")+"的"+paramMap.get("backupDBName")+"，解析完锚点后会将SQL文件输出至"+paramMap.get("outputUrl")+"。","MAS");
         rootFile = backupDatabaseFiles[0];
         File[] timestameFiles = rootFile.listFiles();
-        Arrays.sort(timestameFiles,(file1, file2)->{
-            return file2.getName().compareTo(file1.getName());
+        Arrays.sort(timestameFiles, new Comparator<File>() {
+            @Override
+            public int compare(File file1, File file2) {
+                return file2.getName().compareTo(file1.getName());
+            }
         });
         File lastestFile = timestameFiles[0];
         File[] schemaFiles = lastestFile.listFiles();
@@ -56,8 +60,11 @@ public class AntiMAS {
             bw = new BufferedWriter(osw);
             //这里是哪个schema，一个schema一个文件。
             typeFiles = currentSchemaFile.listFiles();
-            Arrays.sort(typeFiles,(file1,file2)->{
-                return getFileWeight(file1)-getFileWeight(file2);
+            Arrays.sort(typeFiles, new Comparator<File>() {
+                @Override
+                public int compare(File file1, File file2) {
+                    return getFileWeight(file1) - getFileWeight(file2);
+                }
             });
             LogUtils.recordINFOLog("该树杈共计"+typeFiles.length+"个树枝。","MAS");
             for(File currentTypeFiles:typeFiles){

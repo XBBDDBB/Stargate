@@ -28,20 +28,20 @@
 ## 📦 源码项目结构
 ```
 Stargate/
-├── lib/                            # 依赖Jar包（各个数据的JDBC驱动等）
+├── lib/                            # 依赖Jar包(各类数据库的JDBC驱动包，切记为了避免冲突，建议只存放使用ing的包)
 ├── resources/                      # 配置文件与执行脚本
 │   ├── System.conf                 # 星际之门配置
 │   ├── GaussDB.conf                # 「举例子」GaussDB数据库配置
 │   ├── GBaseBAMPP.conf             # 「举例子」GBase8AMPP数据库配置
 │   ├── GBaseBAMPPparameter.conf    # 「举例子」GBase8AMPP数据库参数配置
-│   ├── XXXX.conf                   # XXXX数据库配置
-│   ├── XXXXparameter.conf          # XXXX数据库参数配置
+│   ├── XXXX.conf                   # XXXX数据库配置(其他数据库参考该格式自行配置)
+│   ├── XXXXparameter.conf          # XXXX数据库参数配置(其他数据库参考该格式自行配置)
 │   ├── function.conf               # 封装的一些shell命令
-│   ├── Source2Target.sh            # 从「源」到「目标」正向开启量子跃迁桥(多量子)
+│   ├── Source2Target.sh            # 从「源」到「目标」正向开启量子跃迁桥(多量子)(对应配置we南fundType为1)
 │   ├── Source2TargetSingle.sh      # 从「源」到「目标」正向开启量子跃迁桥(单量子)
-│   ├── Target2Source.sh            # 从「目标」到「源」反向开启量子跃迁桥(多量子)
+│   ├── Target2Source.sh            # 从「目标」到「源」反向开启量子跃迁桥(多量子)(对应配置we南fundType为2)
 │   ├── Target2SourceSingle.sh      # 从「目标」到「源」反向开启量子跃迁桥(单量子)
-│   ├── QuantumTransitionBrideg.sh  # 量子跃迁桥启动脚本
+│   ├── QuantumTransitionBrideg.sh  # 量子跃迁桥启动脚本(依赖Source2Target、Source2TargetSingle、Target2Source、Target2SourceSingle)
 │   ├── MemoryAnchorStake.sh        # 记忆锚点启动脚本
 │   ├── AntiMemoryAnchorStake.sh    # 反记忆锚点启动脚本
 │   └── CommandTargetingNeedle.sh   # 指令靶向针启动脚本
@@ -53,24 +53,25 @@ Stargate/
 │   ├── QuantumTransitionBrideg.java    # 量子跃迁程序入口
 │   ├── MemoryAnchorStake.java          # 记忆锚点程序入口
 │   ├── CommandTargetingNeedle.java     # 指令靶向程序入口
-│   └── XXX.META-INF/
-│           └── MANIFEST.MF
-├── LICENSE
-└── README.md
+│   └── XXX.META-INF/                   # 编译可执行jar刚需
+│           └── MANIFEST.MF             # 指定main方法
+├── AGEMTS.md                       # VibeCoding产物
+├── LICENSE                         # 开源协议
+└── README.md                       # 你猜这是啥
 ```
 ## 🚀 星际之门(部署结构)
 ```
 Stargate/
-├── bin/                                # 存放shell脚本
+├── bin/                                # (必须)存放shell脚本
 │   ├── Source2Target.sh                # 从「源」到「目标」正向开启量子跃迁桥(多量子)
 │   ├── Source2TargetSingle.sh          # 从「源」到「目标」正向开启量子跃迁桥(单量子)
 │   ├── Target2Source.sh                # 从「目标」到「源」反向开启量子跃迁桥(多量子)
 │   ├── Target2SourceSingle.sh          # 从「目标」到「源」反向开启量子跃迁桥(单量子)
-│   ├── QuantumTransitionBrideg.sh      # 量子跃迁桥启动脚本
-│   ├── MemoryAnchorStake.sh            # 记忆锚点启动脚本
-│   ├── AntiMemoryAnchorStake.sh        # 反记忆锚点启动脚本
-│   └── CommandTargetingNeedle.sh       # 指令靶向针启动脚本
-├── backups/                            # 记忆锚点存放路径
+│   ├── QuantumTransitionBrideg.sh      # 量子跃迁桥启动脚本(如不使用此功能，可删除。依赖Source2Target、Source2TargetSingle、Target2Source、Target2SourceSingle)
+│   ├── MemoryAnchorStake.sh            # 记忆锚点启动脚本(如不使用此功能，可删除)
+│   ├── AntiMemoryAnchorStake.sh        # 反记忆锚点启动脚本(如不使用此功能，可删除)
+│   └── CommandTargetingNeedle.sh       # 指令靶向针启动脚本(如不使用此功能，可删除)
+├── backups/                            # (非必须，只有使用「记忆锚点」时必须)记忆锚点存放路径
 │   ├── XXXX1/                          # 自动生成，只举例子用。
 │   │   ├── yyyyMMddHHmmss/             # 自动生成，只举例子用。
 │   │   │   ├── schema1/                # 自动生成，只举例子用。
@@ -84,16 +85,16 @@ Stargate/
 │   └── XXXX1_MASSqlFile/               # 自动生成，只举例子用。
 │       ├── Schema1.sql                 # 自动生成，只举例子用。
 │       └── Schema2.sql                 # 自动生成，只举例子用。
-├── table/                              # 量子跃迁配置。
+├── table/                              # (非必须，只有「量子跃迁」时必须)量子跃迁配置。
 │   ├── XXXX1/                          # 参考Demo.conf进行修改，最后把.conf去掉。
 │   └── XXXX2/                          # 参考Demo.conf进行修改，最后把.conf去掉。
-├── logs/                               # 量子跃迁日志文件（记忆锚点日志在每一个记忆锚点中）。
-├── lib/                                # 存放量子跃迁桥主程序
+├── logs/                               # (非必须，只有「量子跃迁」时必须)量子跃迁日志文件（记忆锚点日志在每一个记忆锚点中）。
+├── lib/                                # (必须)存放量子跃迁桥主程序
 │   ├── function.conf                   # 封装的一些shell命令
 │   ├── quantum-transition-bridge.jar   # 量子跃迁主程序
 │   ├── memory-anchor-stake.jar         # 记忆锚点主程序
 │   └── command-targeting-needle.jar    # 指令靶向主程序
-└── config/
+└── config/                             # (必须)各种配置文件
     ├── System.conf                     # 星际之门配置文件
     ├── XXXX.conf                       # 数据库配置文件
     └── XXXXparameter.conf              # 数据库session参数配置文件
@@ -108,6 +109,16 @@ sh /xxx/xxx/Stargate/bin/xxx2xxxSingle.sh Schema.TableName DeleteType YYYYMMDD e
 
 #参数1说明
 传你想要量子传输的配置文件名字
+#参数2说明
+传你想要量子传输的时间8位不带杠
+#参数3说明
+传你想要量子传输的评估ID
+
+#单量子参数说明
+Schema.TableName为表全名，甚至是要带上schema
+DeleteType为删除方式，同配置文件中那样：1Delete全表，2Truncate全表，0不删只插入，3智能建删分区
+选0、1、2时，可缩写为：Schema.TableName DeleteType，也就是后面两个参数可以不输。
+选3时，必须写满4个参数，缺一不可。
 ```
 ### 如何使用记忆锚点
 ```bash
@@ -154,7 +165,7 @@ sh /xxx/xxx/Stargate/bin/CommandTargetingNeedle.sh 参数 "SQL"
 1. 数据库字符集：现在信创大环境下默认数据库字符集都是UTF8，但也有极个别老旧项目会是GBK，如果遇到数据库字符集不匹配导致中文乱码，可尝试在jdbcurl后面追加字符编码进行尝试。
 2. Shell：支持常规的linux系统，因作者很少使用其他不同版本的linux或unix，可能shell脚本在各别系统中无法使用。可自行修改兼容。如果你的开发环境是windows环境，也可以自行编写bat脚本，最核心的功能其实是java -jar调用量子跃迁桥主程序，shell或bat存在的意义只是为了读取配置文件内容并被操作系统调用执行。
 3. 量子跃迁生成数据文件：暂不支持，未来可能会做用某种分隔符分隔的数据文件，供下数使用。
-4. 因项目中含有1.8特性，所以JDK需要1.8+。（本来可以不用的，但是作者比较懒，后面尽可能优化回来，避免JDK要求。）
+4. 没写什么特殊的东西吧？好像不是很吃jdk版本需求。。。
 
 ## 📜 协议声明
 
@@ -168,16 +179,9 @@ sh /xxx/xxx/Stargate/bin/CommandTargetingNeedle.sh 参数 "SQL"
 
 ## 📞 联系方式
 
-若有问题需要帮助，可通过以下方式联系：（有些联系方式过于逆天，可以忽略）
+若有问题需要帮助，可通过以下方式联系：（有些联系方式过于逆天已被忽略）
 - QQ：1245360000
 - GitHub：https://github.com/XBBDDBB/
 - B站：是兔兔宝吖
-- Steam：大白兔
-- 原神UID：203949843
 - 抖音：是兔兔宝吖
-- 英雄联盟国服：魔法猫咪QAQ
-- 三角洲行动国服：安全总监兔兔宝
-- 坦克世界国服：上帝之杵天基動能武器系統
-- 守望先锋国服：是兔兔宝吖
-- 暗黑4国际服：是兔兔宝吖
 - 。。。。。。
