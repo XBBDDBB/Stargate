@@ -38,7 +38,7 @@ public class ViewBackupTask extends BackupTask{
             return "CREATE VIEW";
         }else if("GaussDB".equals(super.dbUtils.getDBName())){
             return "PG_GET_VIEWDEF";
-        }else if("GaussDB".equals(super.dbUtils.getDBName()) || "OushuDB".equals(super.dbUtils.getDBName())){
+        }else if("DM8".equals(super.dbUtils.getDBName()) || "OushuDB".equals(super.dbUtils.getDBName())){
             return "VIEWDDL";
         }
         return "ERROR";

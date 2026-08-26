@@ -102,7 +102,7 @@ public class SQLUtils {
             //GaussDB的name其实已经时schema.tablename了
             sql = "SELECT PG_GET_TABLEDEF('" +  name + "')";
         }else if("DM8".equals(DBType)){
-            sql = "SELECT DBMS_METADATA.GET_DDL('TABLE', '" + name + "', '" + schema + "')||CHAR(10)||CASE WHEN DBMS_METADATA.GET_DEPENDENT_DDL('COMMENT','" + name + "','" + schema + "') IS NOT NULL THEN REPLACE(DBMS_METADATA.GET_DEPENDENT_DDL('COMMENT','" + name + "','" + schema + "'),CHR(10),';'||CHR(10))||CHR(10)||';'ELSE '-- 该表无注释信息' END AS TABLEDDL FROM DUAL";
+            sql = "SELECT LISTAGG(TABLEDDL,CHAR(10))||CHAR(10) AS TABLEDDL FROM (SELECT DBMS_METADATA.GET_DDL('TABLE', '" +  name + "', '" + schema + "') AS TABLEDDL FROM DUAL UNION ALL SELECT 'COMMENT ON TABLE \"' || OWNER || '\".\"' || TABLE_NAME ||    '\" IS ''' || REPLACE(COMMENTS, '''', '''''') || ''';' AS TABLEDDL FROM ALL_TAB_COMMENTS WHERE OWNER = '" + schema + "' AND TABLE_NAME = '" +  name + "' AND COMMENTS IS NOT NULL UNION ALL SELECT TABLEDDL FROM (SELECT 'COMMENT ON COLUMN \"' || OWNER || '\".\"' || TABLE_NAME || '\".\"' || COLUMN_NAME || '\" IS ''' || REPLACE(COMMENTS, '''', '''''') || ''';' AS TABLEDDL FROM ALL_COL_COMMENTS WHERE OWNER = '" + schema + "' AND TABLE_NAME = '" +  name + "' AND COMMENTS IS NOT NULL ORDER BY COLUMN_NAME))";
         }else if("OushuDB".equals(DBType)){
             sql = "SELECT SHOW_CREATETABLE('" + schema + "." + name + "') AS TABLEDDL";
         }
@@ -206,7 +206,7 @@ public class SQLUtils {
             //GaussDB的name其实已经时schema.tablename了
             sql = "SELECT PG_GET_VIEWDEF('" + name + "')";
         }else if("DM8".equals(DBType)){
-            sql = "SELECT DBMS_METADATA.GET_DDL('VIEW', '" + name + "', '" + schema + "') AS VIEWDDL  FROM DUAL";
+            sql = "SELECT DBMS_METADATA.GET_DDL('VIEW', '" + name + "', '" + schema + "')||CHAR(10) AS VIEWDDL  FROM DUAL";
         }else if("OushuDB".equals(DBType)){
             sql = "SELECT PG_GET_VIEWDEF('" + schema + "." + name + "') AS VIEWDDL";
         }
