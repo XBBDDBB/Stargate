@@ -20,6 +20,7 @@ public class CommandTargetingNeedle {
         DBUtils dbUtils = new DBUtils();
         initUtils.initDB(dbUtils,ParamUtils.paramMap);
         //正式开始
+        LogUtils.recordINFOLog("准备执行："+ParamUtils.paramMap.get("execSql"),"CTN");
         try (PreparedStatement ps = dbUtils.getNewPst(ParamUtils.paramMap.get("execSql"))) {
             StringBuilder executionResult = new StringBuilder();
             boolean isResultSet = ps.execute();
