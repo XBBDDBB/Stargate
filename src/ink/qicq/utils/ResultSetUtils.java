@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -116,7 +117,7 @@ public class ResultSetUtils {
     }
 
     public static String preparedStatementAppending(List<String> columnList, Map<String, String> columnMapping, ResultSet sourceRS, String sourceDBName) throws SQLException, IOException {
-        StringBuffer sb = new StringBuffer("");
+        StringBuilder sb = new StringBuilder("");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for(int j = 0;j<columnList.size();j++){
             //当前列值
@@ -187,7 +188,7 @@ public class ResultSetUtils {
                     InputStream is = ((Blob) object).getBinaryStream();
                     byte[] bytes = new byte[is.available()];
                     is.read(bytes);
-                    String content = new String(bytes, "UTF-8");
+                    String content = new String(bytes, StandardCharsets.UTF_8);
                     is.close();
                     sb.append("'"+content+"'");
                 }

@@ -14,8 +14,8 @@ public class QTBThread implements Callable {
     private Map<String,String> paramMap;
     private int threadId;
     private String threadName;
-    private DBUtils SourceDB = new DBUtils();;
-    private DBUtils TargetDB = new DBUtils();;
+    private DBUtils SourceDB = new DBUtils();
+    private DBUtils TargetDB = new DBUtils();
 
     public QTBThread(Map<String,String> paramMap, int threadId) {
         this.paramMap = paramMap;

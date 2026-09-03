@@ -17,8 +17,8 @@ public class InitQTBThread implements Callable {
     private int threadId;
     private List<String> jobList;
     private String threadName;
-    private DBUtils SourceDB = new DBUtils();;
-    private DBUtils TargetDB = new DBUtils();;
+    private DBUtils SourceDB = new DBUtils();
+    private DBUtils TargetDB = new DBUtils();
 
     public InitQTBThread(Map<String,String> paramMap, int threadId, List<String> jobList) {
         this.paramMap = paramMap;
@@ -41,9 +41,9 @@ public class InitQTBThread implements Callable {
         ResultSet rs = null;
         List<String> columnList = null;
         Map<String, String> columnMapping = null;
-        StringBuffer columnsSql = null;
-        StringBuffer insertSql = null;
-        StringBuffer selectSql = null;
+        StringBuilder columnsSql = null;
+        StringBuilder insertSql = null;
+        StringBuilder selectSql = null;
         long totalCount = 0;
         int bufferForCount = 0;
         String partitionType = null;
@@ -80,7 +80,7 @@ public class InitQTBThread implements Callable {
                     throw new Exception("表结构信息获取异常，请检查！");
                 }
                 //拼接字段sql
-                columnsSql = new StringBuffer("");
+                columnsSql = new StringBuilder("");
                 for(int i = 0;i<columnList.size();i++){
                     if(i==columnList.size()-1){
                         columnsSql.append(columnList.get(i));
@@ -89,7 +89,7 @@ public class InitQTBThread implements Callable {
                     }
                 }
                 //拼接insert预处理语句
-                insertSql = new StringBuffer("insert into "+currentSchemaName+"."+currentTableName+"("+columnsSql.toString()+") values(");
+                insertSql = new StringBuilder("insert into "+currentSchemaName+"."+currentTableName+"("+columnsSql.toString()+") values(");
                 for(int i = 0;i<columnList.size();i++){
                     if(i==columnList.size()-1){
                         insertSql.append("?");
@@ -99,7 +99,7 @@ public class InitQTBThread implements Callable {
                 }
                 insertSql.append(")");
                 //拼接select语句
-                selectSql = new StringBuffer("select "+columnsSql.toString()+" from "+currentSchemaName+"."+currentTableName);
+                selectSql = new StringBuilder("select "+columnsSql.toString()+" from "+currentSchemaName+"."+currentTableName);
                 TargetDB.closeAllExceptConnection();
                 LogUtils.recordINFOLog(this.threadName + "表结构信息获取完毕，开始去来源数据库获取当前表「" + currentTable + "」表数据总数。。。","QTB");
                 rs = SourceDB.getNewRs(SQLUtils.generateTableCountSqlByTableSchemaAndTableName(SourceDB.getDBName(), currentSchemaName, currentTableName));

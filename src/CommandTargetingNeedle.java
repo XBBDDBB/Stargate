@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class CommandTargetingNeedle {
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws ClassNotFoundException {
         long startTime = System.currentTimeMillis();
         //开发测试专用，生产需要注释掉本代码
         //args=initParam(args);

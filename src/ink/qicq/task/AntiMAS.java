@@ -21,14 +21,14 @@ public class AntiMAS {
         }
         LogUtils.recordINFOLog("初始化参数完毕！本次读取的锚点为"+paramMap.get("MASBackupUrl")+"的"+paramMap.get("backupDBName")+"，解析完锚点后会将SQL文件输出至"+paramMap.get("outputUrl")+"。","MAS");
         rootFile = backupDatabaseFiles[0];
-        File[] timestameFiles = rootFile.listFiles();
-        Arrays.sort(timestameFiles, new Comparator<File>() {
+        File[] timestampFiles = rootFile.listFiles();
+        Arrays.sort(timestampFiles, new Comparator<File>() {
             @Override
             public int compare(File file1, File file2) {
                 return file2.getName().compareTo(file1.getName());
             }
         });
-        File lastestFile = timestameFiles[0];
+        File lastestFile = timestampFiles[0];
         File[] schemaFiles = lastestFile.listFiles();
         File[] typeFiles = null;
         File[] sqlFiles = null;

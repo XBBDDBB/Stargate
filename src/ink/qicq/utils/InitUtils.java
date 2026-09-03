@@ -99,9 +99,6 @@ public class InitUtils {
             paramMap.put("bufferSwitch","0");
         }
         paramMap.put("commitCount",args[15]);//多少条提交一次
-//        if(Integer.parseInt(args[14])<Integer.parseInt(args[13]) && "1".equals(paramMap.get("bufferSwitch"))){
-//            paramMap.put("commitCount",args[13]);
-//        }
         paramMap.put("tablePoolSize",args[16]);//线程池大小
         paramMap.put("dataPoolSize",args[17]);//线程池大小
         paramMap.put("tableList",args[18]);//需要同步的表，如果多个用逗号拼接。标准格式：schema.tableName.deleteType
@@ -145,7 +142,7 @@ public class InitUtils {
             BufferedReader br = null;
             Connection conn = null;
             String dbName = currentDB.getDBName();
-            StringBuffer sb = new StringBuffer("");
+            StringBuilder sb = new StringBuilder("");
             try {
                 fis = new FileInputStream(file);
                 isr = new InputStreamReader(fis);

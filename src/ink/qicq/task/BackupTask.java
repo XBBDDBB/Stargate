@@ -7,7 +7,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public abstract class BackupTask {
         return result.toString();
     }
 
-    public File createDirectorys(String type, String tableName) throws IOException {
+    public File createDirectories(String type, String tableName) throws IOException {
         String rootPath = paramMap.get("backupCurrentPath");
         Path path = Paths.get(rootPath, type, tableName+".sql");
         Path parentPath = path.getParent();
@@ -79,7 +78,7 @@ public abstract class BackupTask {
     }
 
     public void writeToFile(String tableName,String sql) throws IOException {
-        File file = createDirectorys(getType(), tableName);
+        File file = createDirectories(getType(), tableName);
         FileOutputStream fos = new FileOutputStream(file);
         OutputStreamWriter osw = new OutputStreamWriter(fos);
         BufferedWriter bw = new BufferedWriter(osw);

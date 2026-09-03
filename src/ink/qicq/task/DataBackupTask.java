@@ -1,13 +1,9 @@
 package ink.qicq.task;
 
-import ink.qicq.utils.LogUtils;
 import ink.qicq.utils.ResultSetUtils;
 import ink.qicq.utils.SQLUtils;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,9 +53,9 @@ public class DataBackupTask extends BackupTask{
         ResultSet resultSet;
         List<String> columnList;
         Map<String, String> columnMapping;
-        StringBuffer columnsSql;
-        StringBuffer insertSql;
-        StringBuffer selectSql;
+        StringBuilder columnsSql;
+        StringBuilder insertSql;
+        StringBuilder selectSql;
         int totalCount = 0;
         int currentInt = 0;
         int bufferForCount = 0;
@@ -70,7 +66,7 @@ public class DataBackupTask extends BackupTask{
                 tableList.add(resultSet.getString("TABLE_FULL_NAME").toUpperCase());
             }
             super.dbUtils.closeAllExceptConnection();
-            File file = createDirectorys("", backupUser+"_ALL_DATA");
+            File file = createDirectories("", backupUser+"_ALL_DATA");
             FileOutputStream fos = new FileOutputStream(file);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
             BufferedWriter bw = new BufferedWriter(osw);
@@ -85,7 +81,7 @@ public class DataBackupTask extends BackupTask{
                 }
                 super.dbUtils.closeAllExceptConnection();
                 //拼接字段sql
-                columnsSql = new StringBuffer("");
+                columnsSql = new StringBuilder("");
                 for(int i = 0;i<columnList.size();i++){
                     if(i==columnList.size()-1){
                         columnsSql.append(columnList.get(i));
@@ -94,9 +90,9 @@ public class DataBackupTask extends BackupTask{
                     }
                 }
                 //拼接insert预处理语句
-                insertSql = new StringBuffer("insert into "+backupUser+"."+currentTableName+"("+columnsSql.toString()+") values(");
+                insertSql = new StringBuilder("insert into "+backupUser+"."+currentTableName+"("+columnsSql.toString()+") values(");
                 //拼接select语句
-                selectSql = new StringBuffer("select "+columnsSql.toString()+" from "+backupUser+"."+currentTableName);
+                selectSql = new StringBuilder("select "+columnsSql.toString()+" from "+backupUser+"."+currentTableName);
                 resultSet = super.dbUtils.getNewRs(SQLUtils.generateTableCountSqlByTableSchemaAndTableName(super.dbUtils.getDBName(), backupUser, currentTableName));
                 while (resultSet.next()) {
                     totalCount = resultSet.getInt(1);
