@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -188,7 +187,7 @@ public class ResultSetUtils {
                     InputStream is = ((Blob) object).getBinaryStream();
                     byte[] bytes = new byte[is.available()];
                     is.read(bytes);
-                    String content = new String(bytes, StandardCharsets.UTF_8);
+                    String content = new String(bytes, "UTF-8");
                     is.close();
                     sb.append("'"+content+"'");
                 }

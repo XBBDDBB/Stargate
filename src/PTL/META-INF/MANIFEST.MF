@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: PhotonTransmissionLens
+Class-Path: DmJdbcDriver-1.8.0-20230418.jar gaussdbjdbc.jar gbase-connec
+ tor-java-9.5.0.7-build1-bin.jar postgresql-42.5.5.jar
+

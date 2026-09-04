@@ -24,6 +24,13 @@
 #### 啊哈！
 #### 现在有了「指令靶向针」，将你的「指令」，在细胞分子水平上，使用「靶向」治疗的方式，治愈自己的晚期癌症！
 #### 那种在绝望当中的光明，那种在饥饿当中的麦当劳，他的味道你知道！
+# 「光子透射(镜)」PhotonTransmissionLens
+#### 啥？想导出台账数据对账，数据库只开放查询权限，导出按钮全是灰的！
+#### 啥？要抽一批数据做报表分析，要筛选字段要格式转换要去重还要弄成表格！
+#### 啥？几百张表每张表好几百万数全要导出来看，你眼珠子不得看瞎了！
+#### 啊哈！
+#### 现在有了「光子透射镜」，将你的「光子」形态的数据，通过「透射」的方式，清晰完整的透射出来，你只要站在镜子前细细钻研即可。
+#### 「光子透射镜」支持流式传输，大表大字段不会炸，量大还会分开压缩给你炫，那叫一个地道！
 
 ## 📦 源码项目结构
 ```
@@ -44,7 +51,8 @@ Stargate/
 │   ├── QuantumTransitionBrideg.sh  # 量子跃迁桥启动脚本(依赖Source2Target、Source2TargetSingle、Target2Source、Target2SourceSingle)
 │   ├── MemoryAnchorStake.sh        # 记忆锚点启动脚本
 │   ├── AntiMemoryAnchorStake.sh    # 反记忆锚点启动脚本
-│   └── CommandTargetingNeedle.sh   # 指令靶向针启动脚本
+│   ├── CommandTargetingNeedle.sh   # 指令靶向针启动脚本
+│   └── PhotonTransmissionLens.sh   # 光子透射启动脚本
 ├── src/                            # 源码目录
 │   ├── ink.qicq/
 │   │   ├── task/                       # 任务模块
@@ -53,6 +61,7 @@ Stargate/
 │   ├── QuantumTransitionBrideg.java    # 量子跃迁程序入口
 │   ├── MemoryAnchorStake.java          # 记忆锚点程序入口
 │   ├── CommandTargetingNeedle.java     # 指令靶向程序入口
+│   ├── PhotonTransmissionLens.java     # 光子透射程序入口
 │   └── XXX.META-INF/                   # 编译可执行jar刚需
 │           └── MANIFEST.MF             # 指定main方法
 ├── AGEMTS.md                       # VibeCoding产物
@@ -70,7 +79,8 @@ Stargate/
 │   ├── QuantumTransitionBrideg.sh      # 量子跃迁桥启动脚本(如不使用此功能，可删除。依赖Source2Target、Source2TargetSingle、Target2Source、Target2SourceSingle)
 │   ├── MemoryAnchorStake.sh            # 记忆锚点启动脚本(如不使用此功能，可删除)
 │   ├── AntiMemoryAnchorStake.sh        # 反记忆锚点启动脚本(如不使用此功能，可删除)
-│   └── CommandTargetingNeedle.sh       # 指令靶向针启动脚本(如不使用此功能，可删除)
+│   ├── CommandTargetingNeedle.sh       # 指令靶向针启动脚本(如不使用此功能，可删除)
+│   └── PhotonTransmissionLens.sh       # 光子透射镜启动脚本(如不使用此功能，可删除)
 ├── backups/                            # (非必须，只有使用「记忆锚点」时必须)记忆锚点存放路径
 │   ├── XXXX1/                          # 自动生成，只举例子用。
 │   │   ├── yyyyMMddHHmmss/             # 自动生成，只举例子用。
@@ -93,7 +103,8 @@ Stargate/
 │   ├── function.conf                   # 封装的一些shell命令
 │   ├── quantum-transition-bridge.jar   # 量子跃迁主程序
 │   ├── memory-anchor-stake.jar         # 记忆锚点主程序
-│   └── command-targeting-needle.jar    # 指令靶向主程序
+│   ├── command-targeting-needle.jar    # 指令靶向主程序
+│   └── photon-transmission-lens.jar    # 光子透射主程序
 └── config/                             # (必须)各种配置文件
     ├── System.conf                     # 星际之门配置文件
     ├── XXXX.conf                       # 数据库配置文件
@@ -141,6 +152,16 @@ sh /xxx/xxx/Stargate/bin/CommandTargetingNeedle.sh 参数 "SQL"
 
 #参数说明
 传你想要靶向的数据库名字
+```
+### 如何使用光子透射
+```bash
+sh /xxx/xxx/Stargate/bin/PhotonTransmissionLens.sh 参数 表名 
+
+#参数说明
+传你想要透射的数据库名字
+
+#光子透射位置
+你在哪里执行，最后就会在哪里生成一个zip包
 ```
 ## ⚙️ 配置文件说明
 

@@ -8,6 +8,8 @@ public class LogUtils {
             return "「记忆锚点」";
         }else if("CTN".equals(systemId)){
             return "「指令靶向」";
+        }else if("PTL".equals(systemId)){
+            return "「光子透射」";
         }else{
             return "「星际之门」";
         }

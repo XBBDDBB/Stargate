@@ -33,7 +33,21 @@ public class InitUtils {
             paramMap = this.initMAS(args);
         }else if("CTN".equals(systemId)){
             paramMap = this.initCTN(args);
+        }else if("PTL".equals(systemId)){
+            paramMap = this.initPTL(args);
         }
+        return paramMap;
+    }
+    private Map<String,String> initPTL(String[] args){
+        LogUtils.recordINFOLog("正在初始化参数。。。","PTL");
+        Map<String,String> paramMap = new HashMap<String,String>();
+        paramMap.put("DBName",args[0]);//数据库的名字
+        paramMap.put("driver",args[1]);//数据库的驱动类
+        paramMap.put("JDBCUrl",args[2]);//数据库的jdbc串
+        paramMap.put("userName",args[3]);//数据库的用户名
+        paramMap.put("password",args[4]);//数据库的密码
+        paramMap.put("propertiesUrl",args[5]);//配置文件的路径
+        paramMap.put("tableName",args[6]);//表名
         return paramMap;
     }
     private Map<String,String> initCTN(String[] args){
@@ -45,7 +59,7 @@ public class InitUtils {
         paramMap.put("userName",args[3]);//数据库的用户名
         paramMap.put("password",args[4]);//数据库的密码
         paramMap.put("propertiesUrl",args[5]);//配置文件的路径
-        paramMap.put("execSql",args[6]);//配置文件的路径
+        paramMap.put("execSql",args[6]);//需要执行的命令
         return paramMap;
     }
     private Map<String,String> initMAS(String[] args){
